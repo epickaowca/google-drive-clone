@@ -7,6 +7,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <GoogleDrive></GoogleDrive>,
   },
+  {
+    path: "/folder/:folderId",
+    element: <GoogleDrive></GoogleDrive>,
+  },
 ]);
 
 const App: FC = () => {

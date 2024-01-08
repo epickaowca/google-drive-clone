@@ -87,7 +87,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
   return state;
 }
 
-const ROOT_FOLDER: FirebaseFolder = {
+export const ROOT_FOLDER: FirebaseFolder = {
   name: "Root",
   id: null,
   path: [],

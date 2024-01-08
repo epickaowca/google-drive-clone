@@ -4,23 +4,30 @@ import { Container } from "react-bootstrap";
 import { AddFolderBtn } from "./AddFolderBtn";
 import { useFolder } from "../hooks/useFolder";
 import { Folder } from "./Folder";
+import { useParams } from "react-router-dom";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 export const Dashboard: FC = () => {
+  const { folderId } = useParams();
   const { folder, childFolders } = useFolder({
-    folderId: "5ppFO3fqSs7OhJMiijIa",
+    folderId,
   });
-  console.log(childFolders);
+  console.log("folder");
+  console.log(folder);
   return (
     <>
       <Navbar></Navbar>
-      <Container>
-        <AddFolderBtn currentFolder={folder} />
+      <Container className="mt-4">
+        <div className="d-flex align-items-center">
+          <Breadcrumbs currentFolder={folder} />
+          <AddFolderBtn currentFolder={folder} />
+        </div>
         {childFolders.length > 0 && (
           <div className="d-flex flex-wrap">
             {childFolders.map((childFolder) => (
               <div
                 key={childFolder.id}
-                style={{ maxWidth: "250px" }}
+                style={{ maxWidth: "200px" }}
                 className="p-2"
               >
                 <Folder folder={childFolder} />

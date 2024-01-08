@@ -10,7 +10,7 @@ export const Navbar: FC = () => {
           OWCA Drive
         </NavbarBS.Brand>
         <Nav>
-          <Nav.Link as={Link} to="/user">
+          <Nav.Link as={Link} to="/user" className="fs-5">
             Profile
           </Nav.Link>
         </Nav>

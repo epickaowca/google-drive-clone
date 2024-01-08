@@ -32,13 +32,13 @@ export type FirebaseFolder = {
   name: string;
   id: string | null;
   parentId: string | null;
-  path: any[];
+  path: { id: string | null; name: string }[] | [];
   userId: string;
 };
 
 type CreateFolderProps = {
   name: string;
-  parentId: string;
+  parentId: string | null;
   userId: string;
   path: any[];
 };
