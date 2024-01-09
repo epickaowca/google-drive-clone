@@ -3,6 +3,8 @@ import {
   firebase,
   FirebaseFolder,
   GetChildFoldersProps,
+  GetChildFilesProps,
+  FirebaseFile,
 } from "../../../firebase";
 import { userId } from "../../authentication/index";
 
@@ -84,6 +86,33 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
     [folderId]
   );
 
+  useEffect(
+    function setChildFiles() {
+      const callbackFunc: GetChildFilesProps["callbackFunc"] = (
+        querySnapshot
+      ) => {
+        const docArr: FirebaseFile[] = [];
+        querySnapshot.forEach((doc) => {
+          const formattedDoc = {
+            ...doc.data(),
+          } as FirebaseFile;
+          docArr.push(formattedDoc);
+        });
+        dispatch({
+          type: ActionType.SET_CHILD_FILES,
+          payload: { childFiles: docArr },
+        });
+      };
+
+      return firebase.getChildFiles({
+        userId,
+        folderId,
+        callbackFunc,
+      });
+    },
+    [folderId]
+  );
+
   return state;
 }
 
@@ -99,9 +128,9 @@ export const ROOT_FOLDER: FirebaseFolder = {
 function reducer(
   state: {
     folderId: any;
-    folder: any;
+    folder: FirebaseFolder | null;
     childFolders: FirebaseFolder[] | [];
-    childFiles: any;
+    childFiles: FirebaseFile[] | [];
   },
   { type, payload }: Action
 ) {
@@ -123,6 +152,11 @@ function reducer(
         ...state,
         childFolders: payload.childFolders,
       };
+    case ActionType.SET_CHILD_FILES:
+      return {
+        ...state,
+        childFiles: payload.childFiles,
+      };
     default:
       return state;
   }
@@ -132,6 +166,7 @@ enum ActionType {
   SELECT_FOLDER = "USE_FOLDER/SELECT_FOLDER",
   UPDATE_FOLDER = "USE_FOLDER/UPDATE_FOLDER",
   SET_CHILD_FOLDERS = "USE_FOLDER/SET_CHILD_FOLDERS",
+  SET_CHILD_FILES = "USE_FOLDER/SET_CHILD_FILES",
 }
 
 type SelectFolder = {
@@ -149,4 +184,9 @@ type SetChildFolders = {
   payload: { childFolders: FirebaseFolder[] | [] };
 };
 
-type Action = SelectFolder | UpdateFolder | SetChildFolders;
+type SetChildFiles = {
+  type: ActionType.SET_CHILD_FILES;
+  payload: { childFiles: FirebaseFile[] | [] };
+};
+
+type Action = SelectFolder | UpdateFolder | SetChildFolders | SetChildFiles;

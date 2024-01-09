@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app";
-
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import {
   onSnapshot,
   getFirestore,
@@ -26,6 +31,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage();
 
 export type FirebaseFolder = {
   createdAt: Timestamp | null;
@@ -36,11 +42,33 @@ export type FirebaseFolder = {
   userId: string;
 };
 
+export type FirebaseFile = {
+  createdAt: Timestamp | null;
+  folderId: string | null;
+  name: string;
+  url: string;
+  userId: string;
+};
+
 type CreateFolderProps = {
   name: string;
   parentId: string | null;
   userId: string;
   path: any[];
+};
+
+type CreateDocumentProps = {
+  url: string;
+  name: string;
+  folderId: string | null;
+  userId: string;
+};
+
+type UploadFileProps = {
+  filePath: string;
+  file: File;
+  folderId: string | null;
+  userId: string;
 };
 
 export type GetChildFoldersProps = {
@@ -56,7 +84,51 @@ export type GetChildFoldersProps = {
   ) => void;
 };
 
+export type GetChildFilesProps = {
+  folderId: string | null;
+  userId: string;
+  callbackFunc: (
+    querySnapshot: QuerySnapshot<
+      DocumentData,
+      {
+        [x: string]: any;
+      }
+    >
+  ) => void;
+};
+
 const methods = {
+  uploadFile: async ({ filePath, file, folderId, userId }: UploadFileProps) => {
+    const fileRef = ref(storage, filePath);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      () => {},
+      async () => {
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        await methods.createDocument({
+          folderId,
+          name: file.name,
+          url,
+          userId,
+        });
+      }
+    );
+  },
+
   getChildFolders: ({
     parentId,
     userId,
@@ -71,6 +143,18 @@ const methods = {
     const unsubscribe = onSnapshot(q, callbackFunc);
     return unsubscribe;
   },
+
+  getChildFiles: ({ folderId, userId, callbackFunc }: GetChildFilesProps) => {
+    const q = query(
+      collection(db, "files"),
+      where("folderId", "==", folderId),
+      where("userId", "==", userId),
+      orderBy("createdAt")
+    );
+    const unsubscribe = onSnapshot(q, callbackFunc);
+    return unsubscribe;
+  },
+
   getFolderById: async (folderId: string) => {
     const docRef = doc(db, "folders", folderId);
     const docSnap = await getDoc(docRef);
@@ -92,6 +176,22 @@ const methods = {
       createdAt: Timestamp.now(),
       parentId,
       path,
+      userId,
+    });
+    return docRef;
+  },
+
+  createDocument: async ({
+    url,
+    name,
+    folderId,
+    userId,
+  }: CreateDocumentProps) => {
+    const docRef = await addDoc(collection(db, "files"), {
+      name,
+      createdAt: Timestamp.now(),
+      folderId,
+      url,
       userId,
     });
     return docRef;

@@ -13,7 +13,7 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
   return (
     <Link
       to={`/folder/${folder.id}`}
-      className="btn btn-outline-dark btn-lg text-truncate w-100"
+      className="btn btn-outline-dark text-truncate w-100"
     >
       <FontAwesomeIcon icon={faFolder} />
       <span className="ms-2">{folder.name}</span>
