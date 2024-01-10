@@ -3,7 +3,6 @@ import { FirebaseFolder } from "../../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
 
 type FolderProps = {
   folder: FirebaseFolder;
