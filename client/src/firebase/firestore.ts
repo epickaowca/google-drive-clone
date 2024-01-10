@@ -1,14 +1,7 @@
-import { initializeApp } from "firebase/app";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  UploadTaskSnapshot,
-} from "firebase/storage";
+import { db, storage } from "./initializer";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
   onSnapshot,
-  getFirestore,
   getDoc,
   getDocs,
   doc,
@@ -18,92 +11,18 @@ import {
   query,
   where,
   orderBy,
-  QuerySnapshot,
-  DocumentData,
   updateDoc,
 } from "firebase/firestore";
+import {
+  CreateDocumentProps,
+  CreateFolderProps,
+  FirebaseFolder,
+  GetChildFilesProps,
+  GetChildFoldersProps,
+  UploadFileProps,
+} from "./types";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAPPkIxgzXFVJzXUeVxjg4uXzvAWUWJSmI",
-  authDomain: "drive-clone-42a8f.firebaseapp.com",
-  projectId: "drive-clone-42a8f",
-  storageBucket: "drive-clone-42a8f.appspot.com",
-  messagingSenderId: "173028159850",
-  appId: "1:173028159850:web:19e725ece636bb4794b513",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage();
-
-export type FirebaseFolder = {
-  createdAt: Timestamp | null;
-  name: string;
-  id: string | null;
-  parentId: string | null;
-  path: { id: string | null; name: string }[] | [];
-  userId: string;
-};
-
-export type FirebaseFile = {
-  createdAt: Timestamp | null;
-  folderId: string | null;
-  name: string;
-  url: string;
-  userId: string;
-};
-
-type CreateFolderProps = {
-  name: string;
-  parentId: string | null;
-  userId: string;
-  path: any[];
-};
-
-type CreateDocumentProps = {
-  url: string;
-  name: string;
-  folderId: string | null;
-  userId: string;
-};
-
-export type UploadFileProps = {
-  filePath: string;
-  file: File;
-  folderId: string | null;
-  userId: string;
-  uploadTaskCB: (snapshot: UploadTaskSnapshot) => void;
-  finishCB: () => void;
-  errorCB: () => void;
-};
-
-export type GetChildFoldersProps = {
-  parentId: string | null;
-  userId: string;
-  callbackFunc: (
-    querySnapshot: QuerySnapshot<
-      DocumentData,
-      {
-        [x: string]: any;
-      }
-    >
-  ) => void;
-};
-
-export type GetChildFilesProps = {
-  folderId: string | null;
-  userId: string;
-  callbackFunc: (
-    querySnapshot: QuerySnapshot<
-      DocumentData,
-      {
-        [x: string]: any;
-      }
-    >
-  ) => void;
-};
-
-const methods = {
+export const methods = {
   uploadFile: async ({
     filePath,
     file,
@@ -210,5 +129,3 @@ const methods = {
     return docRef;
   },
 };
-
-export const firebase = { ...methods };

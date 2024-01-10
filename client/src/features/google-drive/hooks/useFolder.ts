@@ -39,7 +39,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
           payload: { folder: ROOT_FOLDER },
         });
       } else {
-        firebase
+        firebase.firestore
           .getFolderById(folderId)
           .then((folder) => {
             dispatch({
@@ -77,7 +77,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
         });
       };
 
-      return firebase.getChildFolders({
+      return firebase.firestore.getChildFolders({
         userId,
         parentId: folderId,
         callbackFunc,
@@ -104,7 +104,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
         });
       };
 
-      return firebase.getChildFiles({
+      return firebase.firestore.getChildFiles({
         userId,
         folderId,
         callbackFunc,

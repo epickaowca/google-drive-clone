@@ -64,7 +64,7 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder }) => {
       });
     };
 
-    await firebase.uploadFile({
+    await firebase.firestore.uploadFile({
       filePath: fullPath,
       file,
       folderId: currentFolder.id,

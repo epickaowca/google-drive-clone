@@ -34,7 +34,7 @@ export const AddFolderBtn: FC<AddFolderBtnProps> = ({ currentFolder }) => {
       path.push({ name: ROOT_FOLDER.name, id: ROOT_FOLDER.id });
     }
 
-    await firebase.createFolder({
+    await firebase.firestore.createFolder({
       name: folderName,
       parentId: currentFolder.id,
       userId,
