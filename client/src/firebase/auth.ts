@@ -11,7 +11,7 @@ type Email = {
 };
 
 const actionCodeSettings = {
-  url: "",
+  url: "https://google-drive-clone-pi.vercel.app/auth",
   handleCodeInApp: true,
 };
 
