@@ -5,7 +5,7 @@ import { Auth } from "./features/authentication";
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
+    path: "/login",
     element: <Auth />,
   },
   {

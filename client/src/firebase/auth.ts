@@ -11,11 +11,11 @@ type Email = {
 };
 
 const actionCodeSettings = {
-  url: "https://google-drive-clone-pi.vercel.app/auth",
+  url: "wtf",
   handleCodeInApp: true,
 };
 
-const auth = getAuth();
+export const auth = getAuth();
 
 export const methods = {
   sendSingInLink: async ({ email }: Email) => {
