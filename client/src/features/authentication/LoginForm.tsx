@@ -1,54 +1,57 @@
-import { FC, useEffect, useState } from "react";
-import { Form, Container, Image, Row, Col, Button } from "react-bootstrap";
-import personal_email_illustration from "./assets/personal_email.png";
-import { singIn } from "./services/singIn";
+import { FC, useState } from "react";
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
+import { sendEmail } from "./services/singIn";
 import { useAsyncFn } from "../../hooks/useAsync";
 
 export const LoginForm: FC = () => {
   const [email, setEmail] = useState("");
-  const { execute, error, loading, resData } = useAsyncFn(singIn);
+  const {
+    execute: sendEmailExec,
+    error,
+    loading,
+    resData,
+  } = useAsyncFn(sendEmail);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    execute({ email });
+    sendEmailExec({ email }).then(() => {
+      localStorage.setItem("email", email);
+    });
   };
-
-  useEffect(
-    function onSuccess() {
-      if (!!resData) {
-        localStorage.setItem("email", email);
-      }
-    },
-    [resData]
-  );
 
   return (
     <Container style={{ marginTop: "100px" }}>
       <Row className="justify-content-center flex-wrap-reverse">
-        <Col
-          className="p-0 d-none d-lg-block"
-          style={{ maxWidth: "600px", minWidth: "470px" }}
-        >
-          <Image src={personal_email_illustration} fluid />
-        </Col>
-        <Col className="p-0" style={{ maxWidth: "600px", minWidth: "470px" }}>
-          <div style={{ maxWidth: "250px" }}>
-            <Form
-              onSubmit={submitHandler}
-              className="m-auto m-lg-0 flex-column gap-2 d-flex"
+        <Col className="p-0" style={{ maxWidth: "600px" }}>
+          <div className="m-auto">
+            <h1 className="text-center text-info mb-4">Login Account</h1>
+            <p
+              style={{ marginBottom: "70px" }}
+              className="text-center text-secondary"
             >
-              <Form.Label className="m-0">Email address</Form.Label>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+              placerat tortor vel purus feugiat maximus. Nullam quis ligula
+              condimentum, mattis turpis ut, dapibus nibh. Nam dictum lacus nec
+              nisl tincidunt, non varius quam rutrum.
+            </p>
+            <Form
+              style={{ maxWidth: "280px" }}
+              onSubmit={submitHandler}
+              className="m-auto flex-column gap-2 d-flex"
+            >
               <Form.Control
+                size="lg"
                 required
                 autoFocus
                 disabled={loading || !!resData}
-                className="m-0"
+                className="m-0 border-primary"
                 placeholder="example@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
               />
               <Button
+                size="lg"
                 disabled={loading || !!resData}
                 type="submit"
                 variant="outline-primary"
@@ -58,12 +61,12 @@ export const LoginForm: FC = () => {
               </Button>
             </Form>
             {!!resData && (
-              <p className="mt-3">
+              <p className="mt-3 text-center">
                 We send You an link, please check Your email
               </p>
             )}
             {error && (
-              <p className="mt-3">
+              <p className="mt-3 text-center">
                 something wrong, please try again in a few minutes
               </p>
             )}

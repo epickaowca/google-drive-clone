@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FirebaseFolder } from "../../../firebase";
+import { FirebaseFolder } from "../types";
 import { Breadcrumb } from "react-bootstrap";
 import { ROOT_FOLDER } from "../hooks/useFolder";
 import { Link } from "react-router-dom";

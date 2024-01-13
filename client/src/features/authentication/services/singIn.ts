@@ -1,7 +1,11 @@
-import { sendSignInLinkToEmail } from "firebase/auth";
-import { auth } from "../../../firebase/initializer";
+import {
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+  UserCredential,
+} from "firebase/auth";
+import { auth } from "../../../firebase";
 
-export const singIn: SingIn = async ({ email }) => {
+export const sendEmail: SendEmail = async ({ email }) => {
   try {
     await sendSignInLinkToEmail(auth, email, {
       url: "http://localhost:3000/login",
@@ -9,8 +13,23 @@ export const singIn: SingIn = async ({ email }) => {
     });
     return "success";
   } catch (err) {
+    return Promise.reject(err ?? "Error sendEmail");
+  }
+};
+
+export const singIn: SingIn = async ({ email, emailLink }) => {
+  try {
+    return await signInWithEmailLink(auth, email, emailLink);
+  } catch (err) {
     return Promise.reject(err ?? "Error singIn");
   }
 };
 
-export type SingIn = ({ email }: { email: string }) => Promise<string>;
+type SendEmail = ({ email }: { email: string }) => Promise<string>;
+type SingIn = ({
+  email,
+  emailLink,
+}: {
+  email: string;
+  emailLink: string;
+}) => Promise<UserCredential>;

@@ -1,12 +1,12 @@
 import { useReducer, useEffect } from "react";
+import { GetQueryCB, FirebaseFile, FirebaseFolder } from "../../types";
+import { userId } from "../../../authentication/index";
+import { reducer, ActionType } from "./reducer";
 import {
-  firebase,
-  FirebaseFolder,
-  GetChildFoldersProps,
-  GetChildFilesProps,
-  FirebaseFile,
-} from "../../../firebase";
-import { userId } from "../../authentication/index";
+  getFolderById,
+  getChildFolders,
+  getChildFiles,
+} from "../../services/firestore";
 
 type UseFolderProps = {
   folderId?: string | null;
@@ -39,8 +39,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
           payload: { folder: ROOT_FOLDER },
         });
       } else {
-        firebase.firestore
-          .getFolderById(folderId)
+        getFolderById(folderId)
           .then((folder) => {
             dispatch({
               type: ActionType.UPDATE_FOLDER,
@@ -60,9 +59,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
 
   useEffect(
     function setChildFolders() {
-      const callbackFunc: GetChildFoldersProps["callbackFunc"] = (
-        querySnapshot
-      ) => {
+      const callbackFunc: GetQueryCB = (querySnapshot) => {
         const docArr: FirebaseFolder[] = [];
         querySnapshot.forEach((doc) => {
           const formattedDoc = {
@@ -77,7 +74,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
         });
       };
 
-      return firebase.firestore.getChildFolders({
+      return getChildFolders({
         userId,
         parentId: folderId,
         callbackFunc,
@@ -88,9 +85,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
 
   useEffect(
     function setChildFiles() {
-      const callbackFunc: GetChildFilesProps["callbackFunc"] = (
-        querySnapshot
-      ) => {
+      const callbackFunc: GetQueryCB = (querySnapshot) => {
         const docArr: FirebaseFile[] = [];
         querySnapshot.forEach((doc) => {
           const formattedDoc = {
@@ -104,7 +99,7 @@ export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
         });
       };
 
-      return firebase.firestore.getChildFiles({
+      return getChildFiles({
         userId,
         folderId,
         callbackFunc,
@@ -124,69 +119,3 @@ export const ROOT_FOLDER: FirebaseFolder = {
   parentId: "",
   userId: "",
 };
-
-function reducer(
-  state: {
-    folderId: any;
-    folder: FirebaseFolder | null;
-    childFolders: FirebaseFolder[] | [];
-    childFiles: FirebaseFile[] | [];
-  },
-  { type, payload }: Action
-) {
-  switch (type) {
-    case ActionType.SELECT_FOLDER:
-      return {
-        folderId: payload.folderId,
-        folder: payload.folder,
-        childFiles: [],
-        childFolders: [],
-      };
-    case ActionType.UPDATE_FOLDER:
-      return {
-        ...state,
-        folder: payload.folder,
-      };
-    case ActionType.SET_CHILD_FOLDERS:
-      return {
-        ...state,
-        childFolders: payload.childFolders,
-      };
-    case ActionType.SET_CHILD_FILES:
-      return {
-        ...state,
-        childFiles: payload.childFiles,
-      };
-    default:
-      return state;
-  }
-}
-
-enum ActionType {
-  SELECT_FOLDER = "USE_FOLDER/SELECT_FOLDER",
-  UPDATE_FOLDER = "USE_FOLDER/UPDATE_FOLDER",
-  SET_CHILD_FOLDERS = "USE_FOLDER/SET_CHILD_FOLDERS",
-  SET_CHILD_FILES = "USE_FOLDER/SET_CHILD_FILES",
-}
-
-type SelectFolder = {
-  type: ActionType.SELECT_FOLDER;
-  payload: { folderId: string | null; folder: FirebaseFolder | null };
-};
-
-type UpdateFolder = {
-  type: ActionType.UPDATE_FOLDER;
-  payload: { folder: FirebaseFolder | null };
-};
-
-type SetChildFolders = {
-  type: ActionType.SET_CHILD_FOLDERS;
-  payload: { childFolders: FirebaseFolder[] | [] };
-};
-
-type SetChildFiles = {
-  type: ActionType.SET_CHILD_FILES;
-  payload: { childFiles: FirebaseFile[] | [] };
-};
-
-type Action = SelectFolder | UpdateFolder | SetChildFolders | SetChildFiles;

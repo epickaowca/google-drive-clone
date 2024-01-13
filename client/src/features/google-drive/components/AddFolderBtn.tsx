@@ -2,7 +2,8 @@ import { FC, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
-import { firebase, FirebaseFolder } from "../../../firebase";
+import { FirebaseFolder } from "../types";
+import { createFolder } from "../services/firestore";
 import { userId } from "../../authentication/index";
 import { ROOT_FOLDER } from "../hooks/useFolder";
 
@@ -34,7 +35,7 @@ export const AddFolderBtn: FC<AddFolderBtnProps> = ({ currentFolder }) => {
       path.push({ name: ROOT_FOLDER.name, id: ROOT_FOLDER.id });
     }
 
-    await firebase.firestore.createFolder({
+    await createFolder({
       name: folderName,
       parentId: currentFolder.id,
       userId,

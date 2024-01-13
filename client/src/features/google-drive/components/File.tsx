@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FirebaseFile } from "../../../firebase";
+import { FirebaseFile } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 

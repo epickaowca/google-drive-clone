@@ -1,56 +1,40 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/initializer";
-import {
-  isSignInWithEmailLink,
-  sendSignInLinkToEmail,
-  signInWithEmailLink,
-} from "firebase/auth";
+import { auth } from "../../firebase";
+import { singIn } from "./services/singIn";
 import { LoginForm } from "./LoginForm";
+import { useAsyncFn } from "../../hooks/useAsync";
+import { isSignInWithEmailLink } from "firebase/auth";
 
 export const Auth: FC = () => {
-  const [email, setEmail] = useState("");
   const [user] = useAuthState(auth);
+  const { execute: singInExec, loading } = useAsyncFn(singIn, [user]);
 
-  useEffect(() => {
-    if (user) {
-      alert("user already signed in");
-    } else {
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        let email = localStorage.getItem("email")!;
-        if (!email) {
-          email = window.prompt("Please provide your email")!;
+  useEffect(
+    function singInUser() {
+      if (!user) {
+        const emailLink = window.location.href;
+        if (isSignInWithEmailLink(auth, emailLink)) {
+          let email = localStorage.getItem("email")!;
+          if (!email) {
+            email = window.prompt("Please provide your email")!;
+          }
+          singInExec({ email, emailLink });
         }
-
-        signInWithEmailLink(auth, email, window.location.href)
-          .then((result) => {
-            alert("congrats you singed in");
-            console.log(result);
-            localStorage.removeItem("email");
-          })
-          .catch((err) => {
-            alert("error check console");
-            console.log(err);
-          });
-      } else {
-        console.log("enter email and sign in");
       }
-    }
-  }, []);
+    },
+    [user]
+  );
 
   return (
     <>
-      <LoginForm />
-      {/*       
-      <h1>Login page</h1>
-      <form onSubmit={submitHandler}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form> */}
+      {loading ? (
+        <h1>Loading</h1>
+      ) : user ? (
+        <h1>Welcome user</h1>
+      ) : (
+        <LoginForm />
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import ReactDOM from "react-dom";
-import { FirebaseFolder, firebase, UploadFileProps } from "../../../firebase";
+import { FirebaseFolder, UploadTaskCB } from "../types";
+import { uploadFile } from "../services/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { userId } from "../../authentication/index";
@@ -33,7 +34,7 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder }) => {
       { id, name: file.name, progress: 0, error: false },
     ]);
 
-    const uploadTaskCB: UploadFileProps["uploadTaskCB"] = (snapshot) => {
+    const uploadTaskCB: UploadTaskCB = (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       setUploadingFiles((prev) => {
         return prev.map((file) => {
@@ -64,7 +65,7 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder }) => {
       });
     };
 
-    await firebase.firestore.uploadFile({
+    await uploadFile({
       filePath: fullPath,
       file,
       folderId: currentFolder.id,

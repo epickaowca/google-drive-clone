@@ -1,19 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 type AnyFunc = (...args: any) => any;
 
-export function useAsync<T extends AnyFunc>(fn: T, dependencies = []) {
-  const { execute, ...state } = useAsyncInternal<T>(fn, dependencies, true);
-  useEffect(() => {
-    // @ts-ignore
-    execute();
-  }, [execute]);
-
-  return state;
-}
-
-export function useAsyncFn<T extends AnyFunc>(fn: T, dependencies = []) {
-  return useAsyncInternal<T>(fn, dependencies, false);
+export function useAsyncFn<T extends AnyFunc>(
+  fn: T,
+  dependencies: any[] = [],
+  initialLoading?: boolean
+) {
+  return useAsyncInternal<T>(fn, dependencies, initialLoading);
 }
 
 function useAsyncInternal<T extends AnyFunc>(
