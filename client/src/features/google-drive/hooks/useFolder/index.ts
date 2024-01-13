@@ -1,6 +1,5 @@
 import { useReducer, useEffect } from "react";
 import { GetQueryCB, FirebaseFile, FirebaseFolder } from "../../types";
-import { userId } from "../../../authentication/index";
 import { reducer, ActionType } from "./reducer";
 import {
   getFolderById,
@@ -11,9 +10,14 @@ import {
 type UseFolderProps = {
   folderId?: string | null;
   folder?: FirebaseFolder | null;
+  userId: string;
 };
 
-export function useFolder({ folderId = null, folder = null }: UseFolderProps) {
+export function useFolder({
+  folderId = null,
+  folder = null,
+  userId,
+}: UseFolderProps) {
   const [state, dispatch] = useReducer(reducer, {
     folderId,
     folder,

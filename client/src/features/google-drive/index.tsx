@@ -8,11 +8,27 @@ import { Folder } from "./components/Folder";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { File } from "./components/File";
+import { Navigate } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
+
+type DashboardProps = {
+  userId: string;
+};
 
 export const GoogleDrive: FC = () => {
+  const [user, userLoading] = useAuthState(auth);
+  if (userLoading) return <h1>Loading...</h1>;
+  if (!userLoading && !user) return <Navigate to="/login" replace={true} />;
+
+  return <Dashboard userId={user!.uid} />;
+};
+
+const Dashboard: FC<DashboardProps> = ({ userId }) => {
   const { folderId } = useParams();
   const { folder, childFiles, childFolders } = useFolder({
     folderId,
+    userId,
   });
 
   return (
@@ -23,8 +39,8 @@ export const GoogleDrive: FC = () => {
           {folder && (
             <>
               <Breadcrumbs currentFolder={folder} />
-              <AddFileBtn currentFolder={folder} />
-              <AddFolderBtn currentFolder={folder} />
+              <AddFileBtn userId={userId} currentFolder={folder} />
+              <AddFolderBtn userId={userId} currentFolder={folder} />
             </>
           )}
         </div>

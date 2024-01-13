@@ -4,14 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { FirebaseFolder } from "../types";
 import { createFolder } from "../services/firestore";
-import { userId } from "../../authentication/index";
 import { ROOT_FOLDER } from "../hooks/useFolder";
 
 type AddFolderBtnProps = {
   currentFolder: FirebaseFolder;
+  userId: string;
 };
 
-export const AddFolderBtn: FC<AddFolderBtnProps> = ({ currentFolder }) => {
+export const AddFolderBtn: FC<AddFolderBtnProps> = ({
+  currentFolder,
+  userId,
+}) => {
   const [open, setOpen] = useState(false);
   const [folderName, setFolderName] = useState("");
 

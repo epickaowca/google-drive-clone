@@ -4,19 +4,19 @@ import { FirebaseFolder, UploadTaskCB } from "../types";
 import { uploadFile } from "../services/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
-import { userId } from "../../authentication/index";
 import { v4 as uuidV4 } from "uuid";
 import { ProgressBar, Toast } from "react-bootstrap";
 
 type AddFileBtnProps = {
   currentFolder: FirebaseFolder;
+  userId: string;
 };
 
 type UploadingFiles =
   | { id: string | null; name: string; progress: number; error: boolean }[]
   | [];
 
-export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder }) => {
+export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFiles>([]);
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;

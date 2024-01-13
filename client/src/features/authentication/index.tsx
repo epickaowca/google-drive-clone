@@ -5,9 +5,10 @@ import { singIn } from "./services/singIn";
 import { LoginForm } from "./LoginForm";
 import { useAsyncFn } from "../../hooks/useAsync";
 import { isSignInWithEmailLink } from "firebase/auth";
+import { Navigate } from "react-router-dom";
 
 export const Auth: FC = () => {
-  const [user] = useAuthState(auth);
+  const [user, userLoading] = useAuthState(auth);
   const { execute: singInExec, loading } = useAsyncFn(singIn, [user]);
 
   useEffect(
@@ -28,15 +29,13 @@ export const Auth: FC = () => {
 
   return (
     <>
-      {loading ? (
+      {userLoading || loading ? (
         <h1>Loading</h1>
       ) : user ? (
-        <h1>Welcome user</h1>
+        <Navigate to="/" replace={true} />
       ) : (
         <LoginForm />
       )}
     </>
   );
 };
-
-export const userId = "userId_432d43";
