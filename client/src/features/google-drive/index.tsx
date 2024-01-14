@@ -14,6 +14,7 @@ import { auth } from "../../firebase";
 
 type DashboardProps = {
   userId: string;
+  user_email: string | null;
 };
 
 export const GoogleDrive: FC = () => {
@@ -21,10 +22,10 @@ export const GoogleDrive: FC = () => {
   if (userLoading) return <h1>Loading...</h1>;
   if (!userLoading && !user) return <Navigate to="/login" replace={true} />;
 
-  return <Dashboard userId={user!.uid} />;
+  return <Dashboard user_email={user!.email} userId={user!.uid} />;
 };
 
-const Dashboard: FC<DashboardProps> = ({ userId }) => {
+const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
   const { folderId } = useParams();
   const { folder, childFiles, childFolders } = useFolder({
     folderId,
@@ -33,7 +34,7 @@ const Dashboard: FC<DashboardProps> = ({ userId }) => {
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar user_email={user_email}></Navbar>
       <Container className="mt-4">
         <div className="d-flex align-items-center mb-5">
           {folder && (
