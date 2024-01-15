@@ -24,7 +24,9 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
 
     const filePath =
       currentFolder.path.length > 0
-        ? `${currentFolder.path.map((e) => e.name).join("/")}/${file.name}`
+        ? `${currentFolder.path.map((e) => e.name).join("/")}/${
+            currentFolder.name
+          }/${file.name}`
         : `Root/${file.name}`;
     const fullPath = `/files/${userId}/${filePath}`;
 

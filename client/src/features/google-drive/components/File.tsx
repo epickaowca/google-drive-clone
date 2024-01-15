@@ -11,10 +11,8 @@ type FileProps = {
 
 export const File: FC<FileProps> = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(file);
   const onSubmitHandler = async () => {
     await removeFile({ fileId: file.id, filePath: file.filePath });
-    console.log("success");
   };
 
   return (

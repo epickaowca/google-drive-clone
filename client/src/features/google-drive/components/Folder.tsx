@@ -1,8 +1,10 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FirebaseFolder } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { removeFolder } from "../services/firestore";
+import { Modal } from "./Modal";
 import { useFolder } from "../hooks/useFolder";
 
 type FolderProps = {
@@ -11,11 +13,17 @@ type FolderProps = {
 };
 
 export const Folder: FC<FolderProps> = ({ folder, userId }) => {
-  const {
-    folder: currentFolder,
-    childFiles,
-    childFolders,
-  } = useFolder({ folder, userId });
+  const { childFiles, childFolders } = useFolder({
+    userId,
+    folderId: folder.id,
+  });
+  const [isOpen, setIsOpen] = useState(false);
+  const isEmpty = childFiles.length === 0 && childFolders.length === 0;
+  const onSubmitHandler = async () => {
+    if (isEmpty) {
+      await removeFolder(folder.id!);
+    }
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -26,9 +34,20 @@ export const Folder: FC<FolderProps> = ({ folder, userId }) => {
         <FontAwesomeIcon icon={faFolder} />
         <span className="ms-2">{folder.name}</span>
       </Link>
-      <button className="btn btn-outline-dark border-start-0 rounded-start-0">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="btn btn-outline-dark border-start-0 rounded-start-0"
+      >
         <FontAwesomeIcon icon={faRemove} />
       </button>
+      {isOpen && (
+        <Modal
+          error={!isEmpty ? "folder must be empty" : false}
+          onSubmit={onSubmitHandler}
+          message={`Are you sure you want to delete ${folder.name}?`}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 };

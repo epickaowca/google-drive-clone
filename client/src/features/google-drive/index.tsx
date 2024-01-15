@@ -32,8 +32,6 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
     userId,
   });
 
-  console.log(userId);
-
   return (
     <>
       <Navbar user_email={user_email}></Navbar>

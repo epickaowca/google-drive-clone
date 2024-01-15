@@ -5,7 +5,7 @@ type ModalProps = {
   onClose: () => void;
   onSubmit: () => void;
   message: string;
-  error?: string;
+  error?: string | boolean;
 };
 
 export const Modal: FC<ModalProps> = ({

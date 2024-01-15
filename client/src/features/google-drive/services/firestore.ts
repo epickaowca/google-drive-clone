@@ -75,7 +75,7 @@ export const removeFolder = async (folderId: string) => {
   try {
     return await deleteDoc(docRef);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
@@ -86,7 +86,7 @@ export const removeFile = async ({ fileId, filePath }: RemoveFileProps) => {
     await deleteObject(fileRef);
     await deleteDoc(docRef);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
@@ -143,7 +143,6 @@ export const uploadFile = async ({
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.docs.length > 0) {
-      console.log("file existing");
       await updateDoc(querySnapshot.docs[0].ref, {
         url,
       });
