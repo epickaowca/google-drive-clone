@@ -1,5 +1,10 @@
 import { db, storage } from "../../../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import {
   onSnapshot,
   getDoc,
@@ -12,6 +17,7 @@ import {
   where,
   orderBy,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { FirebaseFolder, UploadTaskCB, GetQueryCB } from "../types";
 
@@ -20,6 +26,7 @@ export const createDocument = async ({
   name,
   folderId,
   userId,
+  filePath,
 }: CreateDocumentProps) => {
   const docRef = await addDoc(collection(db, "files"), {
     name,
@@ -27,6 +34,7 @@ export const createDocument = async ({
     folderId,
     url,
     userId,
+    filePath,
   });
   return docRef;
 };
@@ -59,6 +67,26 @@ export const getFolderById = async (folderId: string) => {
     return formattedDoc;
   } else {
     throw "No such document!";
+  }
+};
+
+export const removeFolder = async (folderId: string) => {
+  const docRef = doc(db, "folders", folderId);
+  try {
+    return await deleteDoc(docRef);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const removeFile = async ({ fileId, filePath }: RemoveFileProps) => {
+  const docRef = doc(db, "files", fileId);
+  const fileRef = ref(storage, filePath);
+  try {
+    await deleteObject(fileRef);
+    await deleteDoc(docRef);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -125,9 +153,15 @@ export const uploadFile = async ({
         name: file.name,
         url,
         userId,
+        filePath,
       });
     }
   });
+};
+
+type RemoveFileProps = {
+  filePath: string;
+  fileId: string;
 };
 
 type UploadFileProps = {
@@ -157,6 +191,7 @@ type CreateDocumentProps = {
   name: string;
   folderId: string | null;
   userId: string;
+  filePath: string;
 };
 
 type CreateFolderProps = {

@@ -32,6 +32,8 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
     userId,
   });
 
+  console.log(userId);
+
   return (
     <>
       <Navbar user_email={user_email}></Navbar>
@@ -53,7 +55,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
                 style={{ maxWidth: "200px" }}
                 className="p-2"
               >
-                <Folder folder={childFolder} />
+                <Folder userId={userId} folder={childFolder} />
               </div>
             ))}
           </div>

@@ -11,11 +11,13 @@ export type FirebaseFolder = {
 };
 
 export type FirebaseFile = {
+  id: string;
   createdAt: Timestamp | null;
   folderId: string | null;
   name: string;
   url: string;
   userId: string;
+  filePath: string;
 };
 
 export type GetQueryCB = (

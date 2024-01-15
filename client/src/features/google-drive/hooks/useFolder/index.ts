@@ -93,6 +93,7 @@ export function useFolder({
         const docArr: FirebaseFile[] = [];
         querySnapshot.forEach((doc) => {
           const formattedDoc = {
+            id: doc.id,
             ...doc.data(),
           } as FirebaseFile;
           docArr.push(formattedDoc);
