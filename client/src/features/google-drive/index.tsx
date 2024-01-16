@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Navbar } from "./components/Navbar";
 import { Container } from "react-bootstrap";
 import { AddFolderBtn } from "./components/AddFolderBtn";
@@ -35,12 +35,12 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
 
   return (
     <>
-      <AvailableDiskSpace userId={userId} />
       <Navbar user_email={user_email}></Navbar>
       <Container className="mt-4">
-        <div className="d-flex align-items-center mb-5">
+        <div className="d-flex align-items-center mb-5 position-relative">
           {folder && (
             <>
+              <AvailableDiskSpace childFiles={childFiles} userId={userId} />
               <Breadcrumbs currentFolder={folder} />
               <AddFileBtn userId={userId} currentFolder={folder} />
               <AddFolderBtn userId={userId} currentFolder={folder} />

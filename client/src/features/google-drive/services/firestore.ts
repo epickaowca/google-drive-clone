@@ -204,16 +204,16 @@ export const uploadFile = async ({
         url,
       });
     } else {
+      await updateSizeMeasurementFile({
+        bytes: uploadTask.snapshot.totalBytes,
+        userId,
+      });
       await createDocument({
         folderId,
         name: file.name,
         url,
         userId,
         filePath,
-      });
-      await updateSizeMeasurementFile({
-        bytes: uploadTask.snapshot.totalBytes,
-        userId,
       });
     }
   });
