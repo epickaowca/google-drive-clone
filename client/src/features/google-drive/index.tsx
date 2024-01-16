@@ -11,6 +11,7 @@ import { File } from "./components/File";
 import { Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
+import { AvailableDiskSpace } from "./components/AvailableDiskSpace";
 
 type DashboardProps = {
   userId: string;
@@ -34,6 +35,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
 
   return (
     <>
+      <AvailableDiskSpace userId={userId} />
       <Navbar user_email={user_email}></Navbar>
       <Container className="mt-4">
         <div className="d-flex align-items-center mb-5">
@@ -67,7 +69,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
                 style={{ maxWidth: "200px" }}
                 className="p-2"
               >
-                <File file={childFile} />
+                <File file={childFile} userId={userId} />
               </div>
             ))}
           </div>

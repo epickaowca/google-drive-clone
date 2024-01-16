@@ -4,6 +4,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   deleteObject,
+  getMetadata,
 } from "firebase/storage";
 import {
   onSnapshot,
@@ -17,6 +18,7 @@ import {
   where,
   orderBy,
   updateDoc,
+  setDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { FirebaseFolder, UploadTaskCB, GetQueryCB } from "../types";
@@ -37,6 +39,50 @@ export const createDocument = async ({
     filePath,
   });
   return docRef;
+};
+
+export const getSizeMeasurementFile = async (userId: string) => {
+  const q = query(
+    collection(db, "sizeMeasurement"),
+    where("userId", "==", userId)
+  );
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.docs.length > 0) {
+    return querySnapshot.docs[0].data();
+  } else {
+    return { diskSpaceUsed: 0 };
+  }
+};
+
+const createSizeMeasurementFile = async ({
+  bytes,
+  userId,
+}: CreateSizeMeasurementFileProps) => {
+  const sizeMeasurementRef = doc(collection(db, "sizeMeasurement"));
+  await setDoc(sizeMeasurementRef, {
+    userId,
+    createdAt: Timestamp.now(),
+    diskSpaceUsed: bytes,
+  });
+};
+
+const updateSizeMeasurementFile = async ({
+  bytes,
+  userId,
+}: CreateSizeMeasurementFileProps) => {
+  const q = query(
+    collection(db, "sizeMeasurement"),
+    where("userId", "==", userId)
+  );
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.docs.length > 0) {
+    const prevDiskSpaceUsed = querySnapshot.docs[0].data().diskSpaceUsed;
+    await updateDoc(querySnapshot.docs[0].ref, {
+      diskSpaceUsed: prevDiskSpaceUsed + bytes,
+    });
+  } else {
+    createSizeMeasurementFile({ userId, bytes });
+  }
 };
 
 export const createFolder = async ({
@@ -79,10 +125,20 @@ export const removeFolder = async (folderId: string) => {
   }
 };
 
-export const removeFile = async ({ fileId, filePath }: RemoveFileProps) => {
+export const removeFile = async ({
+  fileId,
+  filePath,
+  userId,
+}: RemoveFileProps) => {
   const docRef = doc(db, "files", fileId);
   const fileRef = ref(storage, filePath);
+  const size = (await getMetadata(fileRef)).size;
+
   try {
+    await updateSizeMeasurementFile({
+      bytes: -size,
+      userId,
+    });
     await deleteObject(fileRef);
     await deleteDoc(docRef);
   } catch (err) {
@@ -134,6 +190,7 @@ export const uploadFile = async ({
   uploadTask.on("state_changed", uploadTaskCB, errorCB, async () => {
     finishCB();
     const url = await getDownloadURL(uploadTask.snapshot.ref);
+
     const q = query(
       collection(db, "files"),
       where("name", "==", file.name),
@@ -154,13 +211,23 @@ export const uploadFile = async ({
         userId,
         filePath,
       });
+      await updateSizeMeasurementFile({
+        bytes: uploadTask.snapshot.totalBytes,
+        userId,
+      });
     }
   });
+};
+
+type CreateSizeMeasurementFileProps = {
+  userId: string;
+  bytes: number;
 };
 
 type RemoveFileProps = {
   filePath: string;
   fileId: string;
+  userId: string;
 };
 
 type UploadFileProps = {

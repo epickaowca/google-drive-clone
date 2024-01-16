@@ -7,12 +7,13 @@ import { removeFile } from "../services/firestore";
 
 type FileProps = {
   file: FirebaseFile;
+  userId: string;
 };
 
-export const File: FC<FileProps> = ({ file }) => {
+export const File: FC<FileProps> = ({ file, userId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const onSubmitHandler = async () => {
-    await removeFile({ fileId: file.id, filePath: file.filePath });
+    await removeFile({ fileId: file.id, filePath: file.filePath, userId });
   };
 
   return (
