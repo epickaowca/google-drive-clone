@@ -26,7 +26,13 @@ export const AvailableDiskSpace: FC<AvailableDiskSpaceProps> = ({
         color: "rgba(33, 37, 41, 0.75)",
       }}
     >
-      {(size / (1024 * 1024)).toFixed(2)}Mb/20Mb
+      {bytesToMb(size)}Mb/20Mb
     </span>
   );
 };
+
+export const bytesToMb = (bytes: number) => {
+  return (bytes / (1024 * 1024)).toFixed(2);
+};
+
+export const MAX_SPACE_IN_MB = 20;

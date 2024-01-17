@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
 import ReactDOM from "react-dom";
 import { FirebaseFolder, UploadTaskCB } from "../types";
-import { uploadFile } from "../services/firestore";
+import { uploadFile, getSizeMeasurementFile } from "../services/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidV4 } from "uuid";
 import { ProgressBar, Toast } from "react-bootstrap";
+import { MAX_SPACE_IN_MB, bytesToMb } from "./AvailableDiskSpace";
 
 type AddFileBtnProps = {
   currentFolder: FirebaseFolder;
@@ -13,13 +14,20 @@ type AddFileBtnProps = {
 };
 
 type UploadingFiles =
-  | { id: string | null; name: string; progress: number; error: boolean }[]
+  | {
+      id: string | null;
+      name: string;
+      progress: number;
+      error: string | null;
+    }[]
   | [];
 
 export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFiles>([]);
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+    const id = uuidV4();
     const file = e.target.files[0];
 
     const filePath =
@@ -30,11 +38,11 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
         : `Root/${file.name}`;
     const fullPath = `/files/${userId}/${filePath}`;
 
-    const id = uuidV4();
     setUploadingFiles((prev) => [
       ...prev,
-      { id, name: file.name, progress: 0, error: false },
+      { id, name: file.name, progress: 0, error: null },
     ]);
+    const currentSize = (await getSizeMeasurementFile(userId)).diskSpaceUsed;
 
     const uploadTaskCB: UploadTaskCB = (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -52,13 +60,12 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
       setUploadingFiles((prev) => {
         return prev.map((file) => {
           if (file.id === id) {
-            return { ...file, error: true };
+            return { ...file, error: "uploading error" };
           }
           return file;
         });
       });
     };
-
     const finishCB = async () => {
       setUploadingFiles((prev) => {
         return prev.filter((file) => {
@@ -67,16 +74,30 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
       });
     };
 
-    await uploadFile({
-      filePath: fullPath,
-      file,
-      folderId: currentFolder.id,
-      userId,
-      uploadTaskCB,
-      finishCB,
-      errorCB,
-    });
+    if (+bytesToMb(currentSize + file.size) > MAX_SPACE_IN_MB) {
+      setUploadingFiles((prev) => {
+        return prev.map((file) => {
+          if (file.id == id) {
+            return { ...file, error: "disk space exceeded" };
+          } else {
+            return file;
+          }
+        });
+      });
+    } else {
+      await uploadFile({
+        filePath: fullPath,
+        file,
+        folderId: currentFolder.id,
+        userId,
+        uploadTaskCB,
+        finishCB,
+        errorCB,
+      });
+    }
+    e.target.value = "";
   };
+
   return (
     <>
       <label className="btn btn-outline-success btn-lg m-0 me-2">
@@ -109,7 +130,7 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
                 }}
               >
                 <Toast.Header
-                  closeButton={file.error}
+                  closeButton={!!file.error}
                   className="text-truncate w-100 d-block"
                 >
                   {file.name}
@@ -120,7 +141,7 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
                     variant={file.error ? "danger" : "primary"}
                     now={file.error ? 100 : file.progress}
                     label={
-                      file.error ? "error" : `${Math.round(file.progress)}%`
+                      file.error ? file.error : `${Math.round(file.progress)}%`
                     }
                   />
                 </Toast.Body>
