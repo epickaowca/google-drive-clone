@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import { singIn } from "./services/singIn";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "./components/LoginForm";
 import { useAsyncFn } from "../../hooks/useAsync";
 import { isSignInWithEmailLink } from "firebase/auth";
 import { Navigate } from "react-router-dom";

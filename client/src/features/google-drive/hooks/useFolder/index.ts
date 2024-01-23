@@ -78,7 +78,7 @@ export function useFolder({
         });
       };
 
-      return getChildFolders({
+      getChildFolders({
         userId,
         parentId: folderId,
         callbackFunc,
@@ -104,7 +104,7 @@ export function useFolder({
         });
       };
 
-      return getChildFiles({
+      getChildFiles({
         userId,
         folderId,
         callbackFunc,

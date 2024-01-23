@@ -100,9 +100,13 @@ export const AddFileBtn: FC<AddFileBtnProps> = ({ currentFolder, userId }) => {
 
   return (
     <>
-      <label className="btn btn-outline-success btn-lg m-0 me-2">
+      <label
+        htmlFor="file_input"
+        className="btn btn-outline-success btn-lg m-0 me-2"
+      >
         <FontAwesomeIcon icon={faFileUpload} />
         <input
+          id="file_input"
           type="file"
           onChange={handleUpload}
           style={{ opacity: 0, position: "absolute", left: "-9999px" }}

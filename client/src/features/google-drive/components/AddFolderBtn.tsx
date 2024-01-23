@@ -28,7 +28,7 @@ export const AddFolderBtn: FC<AddFolderBtnProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (currentFolder == null) return;
+    if (currentFolder == null || folderName === "") return;
 
     const path = [...currentFolder.path];
     if (currentFolder !== ROOT_FOLDER) {
@@ -57,8 +57,9 @@ export const AddFolderBtn: FC<AddFolderBtnProps> = ({
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <Form.Group>
-              <Form.Label>Folder Name</Form.Label>
+              <Form.Label htmlFor="folder_name_input">Folder Name</Form.Label>
               <Form.Control
+                id="folder_name_input"
                 autoFocus
                 type="text"
                 required
