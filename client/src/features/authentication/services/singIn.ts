@@ -8,7 +8,7 @@ import { auth } from "../../../firebase";
 export const sendEmail: SendEmail = async ({ email }) => {
   try {
     await sendSignInLinkToEmail(auth, email, {
-      url: "http://localhost:3000/login",
+      url: process.env.REACT_APP_URL || "http://localhost:3000/login",
       handleCodeInApp: true,
     });
     return "success";

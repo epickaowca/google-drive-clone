@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAPPkIxgzXFVJzXUeVxjg4uXzvAWUWJSmI",
-  authDomain: "drive-clone-42a8f.firebaseapp.com",
-  projectId: "drive-clone-42a8f",
-  storageBucket: "drive-clone-42a8f.appspot.com",
-  messagingSenderId: "173028159850",
-  appId: "1:173028159850:web:19e725ece636bb4794b513",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_SENDER_ID,
+  appId: process.env.REACT_APP_SENDER_ID,
 };
 
 const app = initializeApp(firebaseConfig);
