@@ -1,4 +1,4 @@
-import { screen, render, act, waitFor } from "@testing-library/react";
+import { screen, render, waitFor } from "@testing-library/react";
 import { AvailableDiskSpace } from "../AvailableDiskSpace";
 import { getSizeMeasurementFile } from "../../../../../tests/mocks/fileMock";
 // {bytesToMb(size)}Mb/20Mb

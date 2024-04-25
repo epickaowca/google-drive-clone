@@ -4,7 +4,7 @@ import { UploadTaskSnapshot } from "firebase/storage";
 export type FirebaseFolder = {
   createdAt: Timestamp | null;
   name: string;
-  id: string | null;
+  id: string;
   parentId: string | null;
   path: { id: string | null; name: string }[] | [];
   userId: string;

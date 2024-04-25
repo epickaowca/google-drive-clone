@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { AddFileBtn } from "../AddFileBtn";
-import { ROOT_FOLDER } from "../../hooks/useFolder";
+import { ROOT_FOLDER } from "../../constants";
 import {
   uploadFile,
   getSizeMeasurementFile,

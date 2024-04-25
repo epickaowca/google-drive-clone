@@ -5,16 +5,11 @@ import { useAsyncFn } from "../../../hooks/useAsync";
 
 export const LoginForm: FC = () => {
   const [email, setEmail] = useState("");
-  const {
-    execute: sendEmailExec,
-    error,
-    loading,
-    resData,
-  } = useAsyncFn(sendEmail);
+  const { execute, error, loading, resData } = useAsyncFn(sendEmail);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendEmailExec({ email }).then(() => {
+    execute({ email }).then(() => {
       localStorage.setItem("email", email);
     });
   };

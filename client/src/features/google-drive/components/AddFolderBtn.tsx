@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { FirebaseFolder } from "../types";
 import { createFolder } from "../services/firestore";
-import { ROOT_FOLDER } from "../hooks/useFolder";
 
 type AddFolderBtnProps = {
   currentFolder: FirebaseFolder;
@@ -28,15 +27,12 @@ export const AddFolderBtn: FC<AddFolderBtnProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (currentFolder == null || folderName === "") return;
+    if (folderName === "") return;
 
-    const path = [...currentFolder.path];
-    if (currentFolder !== ROOT_FOLDER) {
-      path.push({ name: currentFolder.name, id: currentFolder.id });
-    }
-    if (currentFolder.path.length === 0) {
-      path.push({ name: ROOT_FOLDER.name, id: ROOT_FOLDER.id });
-    }
+    const path = [
+      ...currentFolder.path,
+      { name: currentFolder.name, id: currentFolder.id },
+    ];
 
     await createFolder({
       name: folderName,

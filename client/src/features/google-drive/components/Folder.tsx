@@ -5,20 +5,18 @@ import { faFolder, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { removeFolder } from "../services/firestore";
 import { Modal } from "./Modal";
-import { useFolder } from "../hooks/useFolder";
+import { useDrive } from "../context";
 
 type FolderProps = {
   folder: FirebaseFolder;
-  userId: string;
 };
 
-export const Folder: FC<FolderProps> = ({ folder, userId }) => {
-  const { childFiles, childFolders } = useFolder({
-    userId,
-    folderId: folder.id,
-  });
+export const Folder: FC<FolderProps> = ({ folder }) => {
+  const { getData } = useDrive();
+  const { files, folders } = getData(folder.id);
+
   const [isOpen, setIsOpen] = useState(false);
-  const isEmpty = childFiles.length === 0 && childFolders.length === 0;
+  const isEmpty = files.length === 0 && folders.length === 0;
   const onSubmitHandler = async () => {
     if (isEmpty) {
       await removeFolder(folder.id!);

@@ -23,103 +23,72 @@ import {
 } from "firebase/firestore";
 import { FirebaseFolder, UploadTaskCB, GetQueryCB } from "../types";
 
-export const createDocument = async ({
-  url,
-  name,
-  folderId,
-  userId,
-  filePath,
-}: CreateDocumentProps) => {
+export const createDocument = async (args: CreateDocumentArgs) => {
   const docRef = await addDoc(collection(db, "files"), {
-    name,
     createdAt: Timestamp.now(),
-    folderId,
-    url,
-    userId,
-    filePath,
+    ...args,
   });
   return docRef;
 };
 
 export const getSizeMeasurementFile = async (userId: string) => {
-  const q = query(
-    collection(db, "sizeMeasurement"),
-    where("userId", "==", userId)
+  const { docs } = await getDocs(
+    query(collection(db, "sizeMeasurement"), where("userId", "==", userId))
   );
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.docs.length > 0) {
-    return querySnapshot.docs[0].data();
-  } else {
-    return { diskSpaceUsed: 0 };
-  }
+  return docs.length > 0 ? docs[0].data() : { diskSpaceUsed: 0 };
 };
 
 const createSizeMeasurementFile = async ({
-  bytes,
   userId,
-}: CreateSizeMeasurementFileProps) => {
-  const sizeMeasurementRef = doc(collection(db, "sizeMeasurement"));
-  await setDoc(sizeMeasurementRef, {
+  bytes,
+}: CreateSizeMeasurementFileArgs) => {
+  await setDoc(doc(collection(db, "sizeMeasurement")), {
     userId,
-    createdAt: Timestamp.now(),
     diskSpaceUsed: bytes,
+    createdAt: Timestamp.now(),
   });
 };
 
 const updateSizeMeasurementFile = async ({
-  bytes,
   userId,
-}: CreateSizeMeasurementFileProps) => {
-  const q = query(
-    collection(db, "sizeMeasurement"),
-    where("userId", "==", userId)
+  bytes,
+}: CreateSizeMeasurementFileArgs) => {
+  const { docs } = await getDocs(
+    query(collection(db, "sizeMeasurement"), where("userId", "==", userId))
   );
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.docs.length > 0) {
-    const prevDiskSpaceUsed = querySnapshot.docs[0].data().diskSpaceUsed;
-    await updateDoc(querySnapshot.docs[0].ref, {
-      diskSpaceUsed: prevDiskSpaceUsed + bytes,
+
+  if (docs.length > 0) {
+    const prevValue = docs[0].data().diskSpaceUsed;
+    await updateDoc(docs[0].ref, {
+      diskSpaceUsed: prevValue + bytes,
     });
   } else {
     createSizeMeasurementFile({ userId, bytes });
   }
 };
 
-export const createFolder = async ({
-  name,
-  parentId,
-  path,
-  userId,
-}: CreateFolderProps) => {
-  const docRef = await addDoc(collection(db, "folders"), {
-    name,
+export const createFolder = async (args: CreateFolderArgs) => {
+  return await addDoc(collection(db, "folders"), {
     createdAt: Timestamp.now(),
-    parentId,
-    path,
-    userId,
+    ...args,
   });
-  return docRef;
 };
 
 export const getFolderById = async (folderId: string) => {
-  const docRef = doc(db, "folders", folderId);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    const formattedDoc = {
-      id: docSnap.id,
-      ...docSnap.data(),
+  const { data, exists, id } = await getDoc(doc(db, "folders", folderId));
+  if (exists()) {
+    return {
+      id,
+      ...data(),
     } as FirebaseFolder;
-
-    return formattedDoc;
   } else {
     throw "No such document!";
   }
 };
 
 export const removeFolder = async (folderId: string) => {
-  const docRef = doc(db, "folders", folderId);
   try {
-    return await deleteDoc(docRef);
+    return await deleteDoc(doc(db, "folders", folderId));
   } catch (err) {
     throw err;
   }
@@ -129,10 +98,9 @@ export const removeFile = async ({
   fileId,
   filePath,
   userId,
-}: RemoveFileProps) => {
-  const docRef = doc(db, "files", fileId);
+}: RemoveFileArgs) => {
   const fileRef = ref(storage, filePath);
-  const size = (await getMetadata(fileRef)).size;
+  const { size } = await getMetadata(fileRef);
 
   try {
     await updateSizeMeasurementFile({
@@ -140,7 +108,7 @@ export const removeFile = async ({
       userId,
     });
     await deleteObject(fileRef);
-    await deleteDoc(docRef);
+    await deleteDoc(doc(db, "files", fileId));
   } catch (err) {
     throw err;
   }
@@ -219,12 +187,20 @@ export const uploadFile = async ({
   });
 };
 
-type CreateSizeMeasurementFileProps = {
+type CreateDocumentArgs = {
+  url: string;
+  name: string;
+  folderId: string | null;
+  userId: string;
+  filePath: string;
+};
+
+type CreateSizeMeasurementFileArgs = {
   userId: string;
   bytes: number;
 };
 
-type RemoveFileProps = {
+type RemoveFileArgs = {
   filePath: string;
   fileId: string;
   userId: string;
@@ -252,15 +228,7 @@ type GetChildFoldersProps = {
   callbackFunc: GetQueryCB;
 };
 
-type CreateDocumentProps = {
-  url: string;
-  name: string;
-  folderId: string | null;
-  userId: string;
-  filePath: string;
-};
-
-type CreateFolderProps = {
+type CreateFolderArgs = {
   name: string;
   parentId: string | null;
   userId: string;

@@ -1,6 +1,6 @@
 import { screen, render, act, fireEvent } from "@testing-library/react";
 import { AddFolderBtn } from "../AddFolderBtn";
-import { ROOT_FOLDER } from "../../hooks/useFolder";
+import { ROOT_FOLDER } from "../../constants";
 import { createFolder } from "../../../../../tests/mocks/fileMock";
 
 const userId = "user123";
