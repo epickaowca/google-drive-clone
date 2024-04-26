@@ -8,7 +8,6 @@ import {
   where,
   updateDoc,
   setDoc,
-  addDoc,
 } from "firebase/firestore";
 
 export const getSizeMeasurementFile = async (userId: string) => {
@@ -36,14 +35,6 @@ export const updateSizeMeasurementFile = async ({
   }
 };
 
-export const createFile = async (args: CreateFileArgs) => {
-  const docRef = await addDoc(collection(db, "files"), {
-    createdAt: Timestamp.now(),
-    ...args,
-  });
-  return docRef;
-};
-
 const createSizeMeasurementFile = async ({
   userId,
   bytes,
@@ -58,12 +49,4 @@ const createSizeMeasurementFile = async ({
 type CreateSizeMeasurementFileArgs = {
   userId: string;
   bytes: number;
-};
-
-type CreateFileArgs = {
-  url: string;
-  name: string;
-  folderId: string | null;
-  userId: string;
-  filePath: string;
 };
