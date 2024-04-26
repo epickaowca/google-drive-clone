@@ -1,7 +1,4 @@
-import {
-  FirebaseFolder,
-  GetQueryCB,
-} from "../../src/features/google-drive/types";
+import { FirebaseFolder, GetQueryCB } from "../../src/types";
 
 export const fakeFolder: FirebaseFolder = {
   createdAt: null,

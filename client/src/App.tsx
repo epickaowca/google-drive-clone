@@ -1,18 +1,33 @@
-import { FC } from "react";
-import { GoogleDrive } from "./features/google-drive";
+import { FC, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Auth } from "./features/authentication";
-import { UserProfile } from "./features/user-profile";
+
+const Home = lazy(() =>
+  import("./pages/Home").then((module) => {
+    return { default: module.Home };
+  })
+);
+
+const Login = lazy(() =>
+  import("./pages/Login").then((module) => {
+    return { default: module.Login };
+  })
+);
+
+const Profile = lazy(() =>
+  import("./pages/Profile").then((module) => {
+    return { default: module.Profile };
+  })
+);
 
 const App: FC = () => {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<GoogleDrive />} />
-          <Route path="/login" element={<Auth />} />
-          <Route path="/folder/:folderId" element={<GoogleDrive />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/folder/:folderId" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </>
