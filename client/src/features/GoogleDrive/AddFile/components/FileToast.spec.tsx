@@ -1,4 +1,5 @@
 export {};
+
 // import {
 //   screen,
 //   render,
@@ -7,17 +8,34 @@ export {};
 //   queryByAttribute,
 // } from "@testing-library/react";
 // import { userEvent } from "@testing-library/user-event";
-// import { AddFile } from "./index";
-// import { ROOT_FOLDER } from "../../../constants";
-// import {
-//   uploadFile,
-//   getSizeMeasurementFile,
-// } from "../../../../tests/mocks/fileMock";
+// import {FileToast} from './FileToast'
+// import * as services from "../services";
+
+// // mock function
+// jest.mock("../services", () => ({
+//   ...jest.requireActual("../services"),
+//   fileExists: jest.fn(() => true),
+// }));
+
+// expect(services.fileExists).toHaveBeenCalled();
+
+// //#########################
+// // spy on function
+// const fileExistsSpy = jest.spyOn(services, "fileExists");
+// fileExistsSpy.mockResolvedValue(true);
 
 // const userId = "user123";
-// // should display input type file
 
-// // should display toast (role alert) after adding file to input
+// file={}id=""onClose
+
+// it("displays error file exists toast", ()=>{
+// render(<FileToast   />)
+// })
+
+// // should display toast success
+// // should display toast error file exists
+// // should display toast error network
+// // should add file to database
 
 // // it("adds file to database", async () => {
 // //   const file = new File([new ArrayBuffer(100)], "hello.png", {
