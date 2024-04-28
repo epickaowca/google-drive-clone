@@ -14,10 +14,8 @@
         "--runTestsByPath",
         "${jest.testFile}"
       ],
-      "cwd": "c:\\Users\\Owca\\Desktop\\programing\\projekty\\7-google-drive-clone\\client",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
       "runtimeExecutable": "npm"
     }
   ]
