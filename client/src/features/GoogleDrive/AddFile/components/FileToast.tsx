@@ -33,7 +33,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
 
   const [user] = useAuthState(auth);
   const userId = user!.uid;
-  const { currentFolder, files, folders } = useDrive();
+  const { currentFolder } = useDrive();
 
   useEffect(() => {
     const asyncFunc = async () => {
