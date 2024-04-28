@@ -2,15 +2,17 @@ import { FC, useState, useId } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
-import { FirebaseFolder } from "../../../types";
 import { createFolder } from "./services";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase";
+import { useDrive } from "../../../context";
 
-type AddFolderBtnProps = {
-  currentFolder: FirebaseFolder;
-  userId: string;
-};
-
-export const AddFolder: FC<AddFolderBtnProps> = ({ currentFolder, userId }) => {
+export const AddFolder: FC = () => {
+  const [user] = useAuthState(auth);
+  const userId = user!.uid;
+  const {
+    currentFolder: { path, name, id },
+  } = useDrive();
   const [showDialog, setShowDialog] = useState(false);
   const [folderName, setFolderName] = useState("");
   const inputId = useId();
@@ -19,24 +21,21 @@ export const AddFolder: FC<AddFolderBtnProps> = ({ currentFolder, userId }) => {
     e.preventDefault();
     if (folderName === "") return;
 
-    const path = [
-      ...currentFolder.path,
-      { name: currentFolder.name, id: currentFolder.id },
-    ];
-
     await createFolder({
       name: folderName,
-      parentId: currentFolder.id,
+      parentId: id,
       userId,
-      path,
+      path: [...path, { name, id }],
     });
 
     setFolderName("");
     setShowDialog(false);
   };
+
   return (
     <>
       <Button
+        aria-label="add folder"
         onClick={() => setShowDialog(true)}
         variant="outline-success"
         size="lg"
