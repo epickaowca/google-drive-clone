@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { FirebaseFolder, FirebaseFile } from "../types";
 import { ROOT_FOLDER } from "../constants";
 import { subscribe } from "./services";
+import { useParams } from "react-router-dom";
 
 export type ContextType = {
   getData: (folderId: string) => {
@@ -16,11 +17,15 @@ export type ContextType = {
 const Context = React.createContext<ContextType | null>(null);
 
 export const useDrive = () => {
+  const { folderId } = useParams();
   const context = useContext(Context);
   if (context === null) {
     throw new Error("useDrive context is undefined");
   } else {
-    return context;
+    const { currentFolder, files, folders } = context.getData(
+      folderId || "root"
+    );
+    return { currentFolder, files, folders };
   }
 };
 

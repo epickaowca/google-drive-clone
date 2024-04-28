@@ -12,8 +12,7 @@ type FolderProps = {
 };
 
 export const Folder: FC<FolderProps> = ({ folder }) => {
-  const { getData } = useDrive();
-  const { files, folders } = getData(folder.id);
+  const { files, folders } = useDrive();
 
   const [isOpen, setIsOpen] = useState(false);
   const isEmpty = files.length === 0 && folders.length === 0;

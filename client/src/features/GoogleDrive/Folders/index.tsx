@@ -1,12 +1,9 @@
 import { FC } from "react";
 import { Folder } from "./components/Folder";
 import { useDrive } from "../../../context";
-import { useParams } from "react-router-dom";
 
 export const Folders: FC = () => {
-  const { folderId } = useParams();
-  const { getData } = useDrive();
-  const { folders } = getData(folderId || "root");
+  const { folders } = useDrive();
 
   return (
     <>

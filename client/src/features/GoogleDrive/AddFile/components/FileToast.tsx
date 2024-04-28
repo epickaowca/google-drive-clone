@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { ProgressBar, Toast } from "react-bootstrap";
 import { fileExists } from "../services";
-import { useParams } from "react-router-dom";
 import { useDrive } from "../../../../context";
 import { auth, storage } from "../../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -34,9 +33,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
 
   const [user] = useAuthState(auth);
   const userId = user!.uid;
-  const { folderId } = useParams();
-  const { getData } = useDrive();
-  const { currentFolder } = getData(folderId || "root");
+  const { currentFolder, files, folders } = useDrive();
 
   useEffect(() => {
     const asyncFunc = async () => {
@@ -85,7 +82,6 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
           setTimeout(() => {
             onClose();
           }, 5000);
-          console.log("hi");
         },
         async () => {
           const url = await getDownloadURL(uploadTask.snapshot.ref);

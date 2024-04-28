@@ -35,8 +35,7 @@ type DashboardProps = {
 
 const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
   const { folderId } = useParams();
-  const { getData } = useDrive();
-  const { files, folders, currentFolder } = getData(folderId || "root");
+  const { currentFolder, files, folders } = useDrive();
 
   return (
     <>
