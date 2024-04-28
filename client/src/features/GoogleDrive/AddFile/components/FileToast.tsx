@@ -5,8 +5,10 @@ import { useParams } from "react-router-dom";
 import { useDrive } from "../../../../context";
 import { auth, storage } from "../../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "./constants";
 import { createFile } from "../services";
+import { getSizeMeasurementFile } from "../../../../services";
+import { MAX_SPACE_IN_BYTES } from "../../AvailableDiskSpace";
 
 type FileToastProps = {
   id: string;
@@ -29,6 +31,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
     progress: 0,
     error: null,
   });
+
   const [user] = useAuthState(auth);
   const userId = user!.uid;
   const { folderId } = useParams();
@@ -46,6 +49,16 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
 
       if (fileAlreadyExists) {
         const error = `file already exists in this directory`;
+        setUploadingFile({ ...fileObj, error });
+        setTimeout(() => {
+          onClose();
+        }, 5000);
+        return "";
+      }
+
+      const { diskSpaceUsed } = await getSizeMeasurementFile(userId);
+      if (diskSpaceUsed + file.size > MAX_SPACE_IN_BYTES) {
+        const error = `Maximum disk space usage exceeded`;
         setUploadingFile({ ...fileObj, error });
         setTimeout(() => {
           onClose();
@@ -72,6 +85,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
           setTimeout(() => {
             onClose();
           }, 5000);
+          console.log("hi");
         },
         async () => {
           const url = await getDownloadURL(uploadTask.snapshot.ref);

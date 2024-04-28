@@ -1,85 +1,125 @@
-export {};
+import { screen, waitFor } from "@testing-library/react";
+import { FileToast } from "./FileToast";
+import { fileExists, createFile } from "../services";
+import { uploadBytesResumable } from "./constants";
+import { render } from "../../../../../tests/render";
+import { UploadTask } from "firebase/storage";
+import { userId } from "../../../../../tests/constants";
+import { fakeFolder } from "../../../../../tests/mocks/contextProvider";
+import { downloadUrl } from "./__mocks__/constants";
 
-// import {
-//   screen,
-//   render,
-//   act,
-//   fireEvent,
-//   queryByAttribute,
-// } from "@testing-library/react";
-// import { userEvent } from "@testing-library/user-event";
-// import {FileToast} from './FileToast'
-// import * as services from "../services";
+jest.useFakeTimers();
+jest.mock("../services");
+jest.mock("./constants");
+jest.mock("../../../../services");
 
-// // mock function
-// jest.mock("../services", () => ({
-//   ...jest.requireActual("../services"),
-//   fileExists: jest.fn(() => true),
-// }));
+const mockedUploadBytesResumable = uploadBytesResumable as jest.Mock<
+  any,
+  any,
+  any
+>;
+const mockedCreateFile = createFile as jest.Mock<any, any, any>;
+const mockedFileExists = fileExists as jest.Mock<any, any, any>;
 
-// expect(services.fileExists).toHaveBeenCalled();
+const file = new File([""], "filename");
 
-// //#########################
-// // spy on function
-// const fileExistsSpy = jest.spyOn(services, "fileExists");
-// fileExistsSpy.mockResolvedValue(true);
+const fileObj = {
+  file,
+  id: "",
+  onClose: jest.fn(),
+};
 
-// const userId = "user123";
+const uploadBytesMockHelper = (p: "progress" | "error" | "finish") =>
+  mockedUploadBytesResumable.mockImplementation(
+    () =>
+      ({
+        snapshot: { ref: {} },
+        on: (
+          state: string,
+          progress: (p: any) => void,
+          error: () => void,
+          finish: () => void
+        ) => {
+          p === "error"
+            ? error()
+            : p === "finish"
+            ? finish()
+            : progress({ bytesTransferred: 50, totalBytes: 100 });
+        },
+      } as UploadTask)
+  );
 
-// file={}id=""onClose
+it("displays error: File already exists", async () => {
+  mockedFileExists.mockResolvedValue(true);
+  render(<FileToast {...fileObj} />);
+  await waitFor(() => {
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "file already exists in this directory"
+    );
+  });
+  jest.runAllTimers();
+  expect(fileObj.onClose).toHaveBeenCalled();
+});
 
-// it("displays error file exists toast", ()=>{
-// render(<FileToast   />)
-// })
+it("displays error: Maximum disk space usage exceeded", async () => {
+  const file = new File([new ArrayBuffer(25000000)], "hello.png", {
+    type: "image/png",
+  });
+  const fileObj = {
+    file,
+    id: "",
+    onClose: jest.fn(),
+  };
+  mockedFileExists.mockResolvedValue(false);
+  render(<FileToast {...fileObj} />);
+  await waitFor(() => {
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Maximum disk space usage exceeded"
+    );
+  });
+  jest.runAllTimers();
+  expect(fileObj.onClose).toHaveBeenCalled();
+});
 
-// // should display toast success
-// // should display toast error file exists
-// // should display toast error network
-// // should add file to database
+it("displays error: error uploading file", async () => {
+  mockedFileExists.mockResolvedValue(false);
+  uploadBytesMockHelper("error");
+  render(<FileToast {...fileObj} />);
+  await waitFor(() => {
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      `${fileObj.file.name}error uploading file`
+    );
+  });
+  jest.runAllTimers();
+  expect(fileObj.onClose).toHaveBeenCalled();
+});
 
-// // it("adds file to database", async () => {
-// //   const file = new File([new ArrayBuffer(100)], "hello.png", {
-// //     type: "image/png",
-// //   });
-// //   const { rerender, container } = render(
-// //     <AddFile currentFolder={ROOT_FOLDER} userId={userId} />
-// //   );
-// //   const getById = queryByAttribute.bind(null, "id");
-// //   const fileInput = getById(container, "file_input");
-// //   await act(async () => {
-// //     await userEvent.upload(fileInput!, file);
-// //   });
-// //   rerender(<AddFile currentFolder={ROOT_FOLDER} userId={userId} />);
-// //   const toast = screen.getByRole("alert");
-// //   expect(toast).toBeInTheDocument();
-// //   expect(getSizeMeasurementFile).toHaveBeenCalled();
-// //   expect(uploadFile).toHaveBeenCalledWith({
-// //     errorCB: expect.anything(),
-// //     file,
-// //     filePath: "/files/user123/Root/hello.png",
-// //     finishCB: expect.anything(),
-// //     folderId: ROOT_FOLDER.id,
-// //     uploadTaskCB: expect.anything(),
-// //     userId,
-// //   });
-// // });
+it("displays progress bar", async () => {
+  mockedFileExists.mockResolvedValue(false);
+  uploadBytesMockHelper("progress");
+  render(<FileToast {...fileObj} />);
+  await waitFor(() => {
+    expect(screen.getByRole("alert")).toHaveTextContent("50%");
+  });
+});
 
-// // it("shows disk space exceeded error", async () => {
-// //   const file = new File([new ArrayBuffer(16500000)], "hello.png", {
-// //     type: "image/png",
-// //   });
-// //   const { rerender, container } = render(
-// //     <AddFile currentFolder={ROOT_FOLDER} userId={userId} />
-// //   );
-// //   const getById = queryByAttribute.bind(null, "id");
-// //   const fileInput = getById(container, "file_input");
+it("displays toast success and calls createFile", async () => {
+  mockedFileExists.mockResolvedValue(false);
+  uploadBytesMockHelper("finish");
+  render(<FileToast {...fileObj} />);
 
-// //   await userEvent.upload(fileInput!, file);
-
-// //   rerender(<AddFile currentFolder={ROOT_FOLDER} userId={userId} />);
-// //   expect(getSizeMeasurementFile).toHaveBeenCalled();
-// //   const toast = screen.getByRole("alert");
-// //   const errorToast = screen.getByText("disk space exceeded");
-// //   expect(toast).toBeInTheDocument();
-// //   expect(errorToast).toBeInTheDocument();
-// // });
+  await waitFor(() => {
+    expect(screen.getByRole("alert")).not.toHaveTextContent(
+      "file already exists in this directory"
+    );
+    expect(mockedCreateFile).toHaveBeenCalledWith({
+      url: downloadUrl,
+      name: fileObj.file.name,
+      folderId: fakeFolder.id,
+      userId: userId,
+      filePath: "/files/testUserId123/Root/fakeFolder/filename",
+      size: 0,
+    });
+    expect(fileObj.onClose).toHaveBeenCalled();
+  });
+});

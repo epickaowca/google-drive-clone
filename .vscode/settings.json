@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["firestore", "fontawesome", "fortawesome"]
+  "cSpell.words": ["firestore", "fontawesome", "fortawesome"],
+  "testing.openTesting": "neverOpen",
+  "jest.outputConfig": {
+    "revealOn": "run",
+    "revealWithFocus": "none",
+    "clearOnRun": "none"
+  }
 }

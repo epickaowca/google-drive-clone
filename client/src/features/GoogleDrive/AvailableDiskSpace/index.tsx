@@ -35,4 +35,5 @@ export const bytesToMb = (bytes: number) => {
   return (bytes / (1024 * 1024)).toFixed(2);
 };
 
-export const MAX_SPACE_IN_MB = 20;
+// 20Mb
+export const MAX_SPACE_IN_BYTES = 20000000;

@@ -5,7 +5,7 @@ import { FirebaseFolder, FirebaseFile } from "../types";
 import { ROOT_FOLDER } from "../constants";
 import { subscribe } from "./services";
 
-type ContextType = {
+export type ContextType = {
   getData: (folderId: string) => {
     folders: FirebaseFolder[];
     files: FirebaseFile[];
@@ -24,7 +24,10 @@ export const useDrive = () => {
   }
 };
 
-export const DriveProvider: FC<{ children?: ReactNode }> = ({ children }) => {
+export const DriveProvider: FC<{
+  children?: ReactNode;
+  staticValue?: ContextType;
+}> = ({ children, staticValue }) => {
   const [user] = useAuthState(auth);
   const [allFiles, setAllFiles] = useState<FirebaseFile[] | null>(null);
   const [allFolders, setAllFolders] = useState<FirebaseFolder[] | null>(null);
@@ -49,8 +52,12 @@ export const DriveProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     };
   };
 
-  if (allFiles && allFolders) {
-    return <Context.Provider value={{ getData }}>{children}</Context.Provider>;
+  if (staticValue || (allFiles && allFolders)) {
+    return (
+      <Context.Provider value={staticValue || { getData }}>
+        {children}
+      </Context.Provider>
+    );
   } else {
     return <h1>Loading...</h1>;
   }
