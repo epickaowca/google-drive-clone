@@ -45,7 +45,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
           <AvailableDiskSpace childFiles={files} userId={userId} />
           <Breadcrumbs currentFolder={currentFolder} />
           <AddFile />
-          <AddFolder userId={userId} currentFolder={currentFolder} />
+          <AddFolder />
         </div>
 
         <Folders />
