@@ -1,18 +1,14 @@
 import { screen, waitFor } from "@testing-library/react";
 import { FileToast } from "./FileToast";
 import { fileExists, createFile } from "../services";
-import { uploadBytesResumable } from "./constants";
 import { render } from "../../../../../tests/render";
-import { UploadTask } from "firebase/storage";
+import { UploadTask, uploadBytesResumable } from "firebase/storage";
 import { userId } from "../../../../../tests/constants";
 import { fakeFolder } from "../../../../../tests/constants";
 
 const downloadUrl = "mockedUrl";
 jest.useFakeTimers();
-jest.mock("../services", () => ({
-  createFile: jest.fn(),
-  fileExists: jest.fn(),
-}));
+jest.mock("../services");
 jest.mock("firebase/storage", () => ({
   ref: jest.fn(() => ({})),
   getDownloadURL: jest.fn(() => Promise.resolve(downloadUrl)),
