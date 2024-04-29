@@ -3,11 +3,7 @@ import { render } from "../../../../tests/render";
 import { AvailableDiskSpace } from "../AvailableDiskSpace";
 import { getSizeMeasurementFile } from "../../../services";
 
-const mockedSizeMeasurementFile = getSizeMeasurementFile as jest.Mock<
-  any,
-  any,
-  any
->;
+const mockedSizeMeasurementFile = getSizeMeasurementFile as jest.Mock<any>;
 
 it("displays default available disk space", () => {
   render(<AvailableDiskSpace />);

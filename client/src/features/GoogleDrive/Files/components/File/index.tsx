@@ -11,13 +11,14 @@ type FileProps = {
   file: FirebaseFile;
 };
 
-export const File: FC<FileProps> = ({ file }) => {
+export const File: FC<FileProps> = ({ file: { id, filePath, name, url } }) => {
   const [user] = useAuthState(auth);
   const [isOpen, setIsOpen] = useState(false);
+
   const onSubmitHandler = async () => {
     await removeFile({
-      fileId: file.id,
-      filePath: file.filePath,
+      fileId: id,
+      filePath: filePath,
       userId: user!.uid,
     });
   };
@@ -25,15 +26,16 @@ export const File: FC<FileProps> = ({ file }) => {
   return (
     <div style={{ display: "flex" }}>
       <a
-        href={file.url}
+        href={url}
         target="_blank"
         className="btn btn-outline-dark text-truncate w-100 border-end-0 rounded-end-0"
         style={{ position: "relative" }}
       >
         <FontAwesomeIcon icon={faFile} />
-        <span className="ms-2">{file.name}</span>
+        <span className="ms-2">{name}</span>
       </a>
       <button
+        aria-label="remove file"
         onClick={() => setIsOpen(true)}
         className="btn btn-outline-dark border-start-0 rounded-start-0"
       >
@@ -42,7 +44,7 @@ export const File: FC<FileProps> = ({ file }) => {
       {isOpen && (
         <Modal
           onSubmit={onSubmitHandler}
-          message={`Are you sure you want to delete ${file.name}?`}
+          message={`Are you sure you want to delete ${name}?`}
           onClose={() => setIsOpen(false)}
         />
       )}

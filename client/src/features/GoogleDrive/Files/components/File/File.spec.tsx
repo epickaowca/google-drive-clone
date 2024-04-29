@@ -1,43 +1,37 @@
-export {};
-// import { File } from "../File";
-// import { render, screen, act } from "@testing-library/react";
-// import { FirebaseFile } from "../../../../../types";
-// import { removeFile } from "../../../../../../tests/mocks/fileMock";
+import { act, screen, waitFor } from "@testing-library/react";
+import { render } from "../../../../../../tests/render";
+import { File } from "./index";
+import { userId, fakeFile } from "../../../../../../tests/constants";
 
-// const userId = "user123";
+import { removeFile } from "../../services";
+const mockedRemoveFile = removeFile as jest.Mock<any>;
 
-// const fakeFile: FirebaseFile = {
-//   createdAt: null,
-//   filePath: "fakePath",
-//   folderId: "",
-//   id: "ewf43grwe",
-//   name: "cotton.png",
-//   url: "fakeUrl.png",
-//   userId,
-// };
+jest.mock("../../services", () => ({
+  removeFile: jest.fn(),
+}));
 
-// it("renders File with correct url", async () => {
-//   render(<File file={fakeFile} />);
-//   const anchor = screen.getByRole("link");
-//   await expect(anchor).toHaveAttribute("href", fakeFile.url);
-// });
+it("displays file icon", () => {
+  render(<File file={fakeFile} />);
+  expect(screen.getByText(fakeFile.name)).toBeInTheDocument();
+  expect(screen.getByRole("link")).toHaveAttribute("href", fakeFile.url);
+});
 
-// it("removes file", async () => {
-//   const { rerender } = render(<File file={fakeFile} />);
-//   const btn = screen.getByRole("button");
-//   await act(async () => {
-//     await btn.click();
-//   });
-//   rerender(<File file={fakeFile} />);
-//   const dialog = screen.getByRole("dialog");
-//   const removeBtn = screen.getByText("Remove");
-//   expect(dialog).toBeInTheDocument();
-//   await act(async () => {
-//     await removeBtn.click();
-//   });
-//   expect(removeFile).toHaveBeenCalledWith({
-//     fileId: fakeFile.id,
-//     filePath: fakeFile.filePath,
-//     userId,
-//   });
-// });
+it("calls remove file after confirming dialog", async () => {
+  render(<File file={fakeFile} />);
+  const button = screen.getByRole("button", { name: "remove file" });
+  await button.click();
+
+  await waitFor(async () => {
+    expect(
+      screen.getByText(`Are you sure you want to delete ${fakeFile.name}?`)
+    ).toBeInTheDocument();
+  });
+  await act(async () => {
+    await screen.getByRole("button", { name: "Remove" }).click();
+  });
+  expect(mockedRemoveFile).toHaveBeenCalledWith({
+    fileId: fakeFile.id,
+    filePath: fakeFile.filePath,
+    userId,
+  });
+});

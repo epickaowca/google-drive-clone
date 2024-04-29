@@ -2,7 +2,7 @@ import { screen, act, waitFor, fireEvent } from "@testing-library/react";
 import { render } from "../../../../tests/render";
 import { AddFolder } from "./index";
 import { createFolder } from "./services";
-import { fakeFolder } from "../../../../tests/mocks/contextProvider";
+import { fakeFolder } from "../../../../tests/constants";
 import { userId } from "../../../../tests/constants";
 
 jest.mock("./services");

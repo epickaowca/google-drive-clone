@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { render } from "../../../../tests/render";
 import { Breadcrumbs } from "../Breadcrumbs";
-import { fakeFolder } from "../../../../tests/mocks/contextProvider";
+import { fakeFolder } from "../../../../tests/constants";
 
 it("displays root anchor and fakeFolder li", () => {
   render(<Breadcrumbs />);
