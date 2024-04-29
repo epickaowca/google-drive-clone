@@ -1,39 +1,26 @@
 import { FC } from "react";
-import { FirebaseFolder } from "../../../types";
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { ROOT_FOLDER } from "../../../constants";
+import { useDrive } from "../../../context";
 
-type BreadcrumbsProps = {
-  currentFolder: FirebaseFolder;
-};
-
-export const Breadcrumbs: FC<BreadcrumbsProps> = ({ currentFolder }) => {
-  let path: FirebaseFolder["path"] = [];
-  if (currentFolder) {
-    path = [
-      ...path,
-      ...currentFolder.path,
-      { name: currentFolder.name, id: currentFolder.id },
-    ];
-  }
-  if (path.length === 0) {
-    path = [{ name: ROOT_FOLDER.name, id: ROOT_FOLDER.id }];
-  }
+export const Breadcrumbs: FC = () => {
+  const { currentFolder } = useDrive();
+  const { name, id, path: folderPath } = currentFolder;
+  const path = [...folderPath, { name, id }];
 
   return (
     <Breadcrumb className="flex-grow-1" listProps={{ className: "m-0" }}>
-      {path.map((folder, index) => {
+      {path.map(({ id, name }, index) => {
         return (
           <Breadcrumb.Item
             active={index === path.length - 1}
-            key={folder.id}
+            key={id}
             linkAs={Link}
-            linkProps={{ to: folder.id ? `/folder/${folder.id}` : "/" }}
+            linkProps={{ to: `/folder/${id}` }}
             className="d-inline-block"
             style={{ maxWidth: "150px" }}
           >
-            {folder.name}
+            {name}
           </Breadcrumb.Item>
         );
       })}

@@ -33,7 +33,7 @@ type DashboardProps = {
 };
 
 const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
-  const { currentFolder, files, folders } = useDrive();
+  const { files, folders } = useDrive();
 
   return (
     <>
@@ -41,7 +41,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
       <Container className="mt-4">
         <div className="d-flex align-items-center mb-5 position-relative">
           <AvailableDiskSpace />
-          <Breadcrumbs currentFolder={currentFolder} />
+          <Breadcrumbs />
           <AddFile />
           <AddFolder />
         </div>
