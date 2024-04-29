@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
@@ -34,7 +33,6 @@ type DashboardProps = {
 };
 
 const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
-  const { folderId } = useParams();
   const { currentFolder, files, folders } = useDrive();
 
   return (
@@ -42,7 +40,7 @@ const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
       <Navbar user_email={user_email}></Navbar>
       <Container className="mt-4">
         <div className="d-flex align-items-center mb-5 position-relative">
-          <AvailableDiskSpace childFiles={files} userId={userId} />
+          <AvailableDiskSpace />
           <Breadcrumbs currentFolder={currentFolder} />
           <AddFile />
           <AddFolder />

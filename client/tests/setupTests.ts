@@ -17,7 +17,7 @@ jest.mock("../src/context/services", () => ({
 }));
 
 jest.mock("../src/services", () => ({
-  getSizeMeasurementFile: jest.fn(() => ({ diskSpaceUsed: 0 })),
+  getSizeMeasurementFile: jest.fn(() => Promise.resolve({ diskSpaceUsed: 0 })),
   updateSizeMeasurementFile: jest.fn(),
   createSizeMeasurementFile: jest.fn(),
 }));

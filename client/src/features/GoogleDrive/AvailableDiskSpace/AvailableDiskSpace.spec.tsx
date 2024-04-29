@@ -1,17 +1,25 @@
-export {};
-// import { screen, render, waitFor } from "@testing-library/react";
-// import { AvailableDiskSpace } from "../AvailableDiskSpace";
-// import { getSizeMeasurementFile } from "../../../../tests/mocks/fileMock";
-// // {bytesToMb(size)}Mb/20Mb
+import { screen, waitFor } from "@testing-library/react";
+import { render } from "../../../../tests/render";
+import { AvailableDiskSpace } from "../AvailableDiskSpace";
+import { getSizeMeasurementFile } from "../../../services";
 
-// 6500000;
-// it("shows available disk space", async () => {
-//   const { rerender } = render(
-//     <AvailableDiskSpace userId="user123" childFiles={[]} />
-//   );
-//   expect(getSizeMeasurementFile).toHaveBeenCalled();
+const mockedSizeMeasurementFile = getSizeMeasurementFile as jest.Mock<
+  any,
+  any,
+  any
+>;
 
-//   await waitFor(() =>
-//     expect(screen.getByText("6.20Mb/20Mb")).toBeInTheDocument()
-//   );
-// });
+it("displays default available disk space", () => {
+  render(<AvailableDiskSpace />);
+  expect(mockedSizeMeasurementFile).toHaveBeenCalled();
+  expect(screen.getByText("0.00 / 20Mb")).toBeInTheDocument();
+});
+
+it("displays available disk space for 15728640 bytes used", async () => {
+  mockedSizeMeasurementFile.mockResolvedValue({ diskSpaceUsed: 15728640 });
+  render(<AvailableDiskSpace />);
+  expect(mockedSizeMeasurementFile).toHaveBeenCalled();
+  await waitFor(async () =>
+    expect(screen.getByText("15.00 / 20Mb")).toBeInTheDocument()
+  );
+});

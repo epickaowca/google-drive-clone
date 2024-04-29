@@ -1,22 +1,21 @@
 import { FC, useEffect, useState } from "react";
 import { getSizeMeasurementFile } from "../../../services";
-import { FirebaseFile } from "../../../types";
+import { bytesToMb } from "./utils";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase";
+import { useDrive } from "../../../context";
 
-type AvailableDiskSpaceProps = {
-  userId: string;
-  childFiles: [] | FirebaseFile[];
-};
-
-export const AvailableDiskSpace: FC<AvailableDiskSpaceProps> = ({
-  userId,
-  childFiles,
-}) => {
+export const AvailableDiskSpace: FC = () => {
   const [size, setSize] = useState(0);
+  const [user] = useAuthState(auth);
+  const userId = user!.uid;
+  const { files } = useDrive();
+
   useEffect(() => {
     getSizeMeasurementFile(userId).then((data) => {
       setSize(data.diskSpaceUsed);
     });
-  }, [childFiles, userId]);
+  }, [files, userId]);
 
   return (
     <span
@@ -26,14 +25,10 @@ export const AvailableDiskSpace: FC<AvailableDiskSpaceProps> = ({
         color: "rgba(33, 37, 41, 0.75)",
       }}
     >
-      {bytesToMb(size)}Mb/20Mb
+      {bytesToMb(size)} / 20Mb
     </span>
   );
 };
 
-export const bytesToMb = (bytes: number) => {
-  return (bytes / (1024 * 1024)).toFixed(2);
-};
-
 // 20Mb
-export const MAX_SPACE_IN_BYTES = 20000000;
+export const MAX_SPACE_IN_BYTES = 20971520;
