@@ -3,7 +3,7 @@ import { ProgressBar, Toast } from "react-bootstrap";
 import { fileExists } from "../services";
 import { useDrive } from "../../../../context";
 import { storage } from "../../../../firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "./constants";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { createFile } from "../services";
 import { getSizeMeasurementFile } from "../../../../services";
 import { MAX_SPACE_IN_BYTES } from "../../AvailableDiskSpace";

@@ -6,12 +6,18 @@ import { render } from "../../../../../tests/render";
 import { UploadTask } from "firebase/storage";
 import { userId } from "../../../../../tests/constants";
 import { fakeFolder } from "../../../../../tests/constants";
-import { downloadUrl } from "./__mocks__/constants";
 
+const downloadUrl = "mockedUrl";
 jest.useFakeTimers();
-jest.mock("../services");
-jest.mock("./constants");
-jest.mock("../../../../services");
+jest.mock("../services", () => ({
+  createFile: jest.fn(),
+  fileExists: jest.fn(),
+}));
+jest.mock("firebase/storage", () => ({
+  ref: jest.fn(() => ({})),
+  getDownloadURL: jest.fn(() => Promise.resolve(downloadUrl)),
+  uploadBytesResumable: jest.fn(() => ({ on: {}, snapshot: { ref: {} } })),
+}));
 
 const mockedUploadBytesResumable = uploadBytesResumable as jest.Mock<any>;
 const mockedCreateFile = createFile as jest.Mock<any>;
