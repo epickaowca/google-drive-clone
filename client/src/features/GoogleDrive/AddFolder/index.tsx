@@ -3,13 +3,11 @@ import { Button, Modal, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { createFolder } from "./services";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase";
 import { useDrive } from "../../../context";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const AddFolder: FC = () => {
-  const [user] = useAuthState(auth);
-  const userId = user!.uid;
+  const { userId } = useAuth();
   const {
     currentFolder: { path, name, id },
   } = useDrive();

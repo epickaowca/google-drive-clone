@@ -2,12 +2,12 @@ import { FC, useEffect, useState } from "react";
 import { ProgressBar, Toast } from "react-bootstrap";
 import { fileExists } from "../services";
 import { useDrive } from "../../../../context";
-import { auth, storage } from "../../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { storage } from "../../../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "./constants";
 import { createFile } from "../services";
 import { getSizeMeasurementFile } from "../../../../services";
 import { MAX_SPACE_IN_BYTES } from "../../AvailableDiskSpace";
+import { useAuth } from "../../../../hooks/useAuth";
 
 type FileToastProps = {
   id: string;
@@ -30,9 +30,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
     progress: 0,
     error: null,
   });
-
-  const [user] = useAuthState(auth);
-  const userId = user!.uid;
+  const { userId } = useAuth();
   const { currentFolder } = useDrive();
 
   useEffect(() => {

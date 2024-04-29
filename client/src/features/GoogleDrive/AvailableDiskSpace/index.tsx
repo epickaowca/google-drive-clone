@@ -1,14 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { getSizeMeasurementFile } from "../../../services";
 import { bytesToMb } from "./utils";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase";
 import { useDrive } from "../../../context";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const AvailableDiskSpace: FC = () => {
   const [size, setSize] = useState(0);
-  const [user] = useAuthState(auth);
-  const userId = user!.uid;
+  const { userId } = useAuth();
   const { files } = useDrive();
 
   useEffect(() => {
