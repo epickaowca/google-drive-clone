@@ -5,7 +5,7 @@ type ModalProps = {
   onClose: () => void;
   onSubmit: () => void;
   message: string;
-  error?: boolean;
+  error?: string | boolean;
 };
 
 export const Modal: FC<ModalProps> = ({
@@ -24,7 +24,7 @@ export const Modal: FC<ModalProps> = ({
 
   return (
     <ModalBS show={open} onHide={() => setOpen(false)}>
-      <ModalBS.Body className="text-center">{message}</ModalBS.Body>
+      <ModalBS.Body className="text-center">{error ?? message}</ModalBS.Body>
       <ModalBS.Footer className="justify-content-center">
         <Button variant={error ? "danger" : "dark"} onClick={submitHandler}>
           {error ? "OK" : "Remove"}
