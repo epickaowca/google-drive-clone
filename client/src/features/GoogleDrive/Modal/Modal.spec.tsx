@@ -1,47 +1,31 @@
-export {};
-// import { Modal } from "../Modal";
-// import { screen, render, act } from "@testing-library/react";
+import { Modal } from "../Modal";
+import { screen } from "@testing-library/react";
+import { render } from "../../../../tests/render";
 
-// it("renders modal without error", async () => {
-//   const onClose = jest.fn();
-//   const onSubmit = jest.fn();
+it("displays message and Remove button", () => {
+  const message = "messageTest";
+  render(<Modal onSubmit={jest.fn()} onClose={jest.fn()} message={message} />);
+  expect(screen.getByText(message)).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Remove" })).toBeInTheDocument();
+});
 
-//   const { rerender } = render(
-//     <Modal message="message" onClose={onClose} onSubmit={onSubmit} />
-//   );
-//   const message = screen.getByText("message");
-//   const dialog = screen.getByRole("dialog");
-//   const btn = screen.getByText("Remove");
-//   expect(message).toBeInTheDocument();
-//   expect(dialog).toBeInTheDocument();
-//   await act(async () => {
-//     btn.click();
-//   });
-//   rerender(<Modal message="message" onClose={onClose} onSubmit={onSubmit} />);
+it("displays error button", () => {
+  render(
+    <Modal
+      message="messageTest"
+      onSubmit={jest.fn()}
+      onClose={jest.fn()}
+      error={true}
+    />
+  );
+  expect(screen.getByRole("button", { name: "OK" })).toBeInTheDocument();
+});
 
-//   expect(onSubmit).toHaveBeenCalled();
-//   expect(onClose).toHaveBeenCalled();
-// });
-
-// it("renders error modal", async () => {
-//   const onClose = jest.fn();
-//   const onSubmit = jest.fn();
-
-//   const { rerender } = render(
-//     <Modal
-//       message="message"
-//       error="error"
-//       onClose={onClose}
-//       onSubmit={onSubmit}
-//     />
-//   );
-//   const dialog = screen.getByRole("dialog");
-//   const btn = screen.getByText("OK");
-//   expect(dialog).toBeInTheDocument();
-//   await act(async () => {
-//     btn.click();
-//   });
-//   rerender(<Modal message="error" onClose={onClose} onSubmit={onSubmit} />);
-//   expect(onSubmit).toHaveBeenCalled();
-//   expect(onClose).toHaveBeenCalled();
-// });
+it("clicking submit button calls onSubmit", async () => {
+  const onSubmit = jest.fn();
+  render(
+    <Modal message="messageTest" onSubmit={onSubmit} onClose={jest.fn()} />
+  );
+  await screen.getByRole("button", { name: "Remove" }).click();
+  expect(onSubmit).toHaveBeenCalled();
+});

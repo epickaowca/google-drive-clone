@@ -5,7 +5,7 @@ type ModalProps = {
   onClose: () => void;
   onSubmit: () => void;
   message: string;
-  error?: string | boolean;
+  error?: boolean;
 };
 
 export const Modal: FC<ModalProps> = ({
@@ -16,21 +16,15 @@ export const Modal: FC<ModalProps> = ({
 }) => {
   const [open, setOpen] = useState(true);
 
-  const closeModal = () => {
-    setOpen(false);
-  };
-
   const submitHandler = async () => {
-    closeModal();
+    setOpen(false);
     onSubmit && onSubmit();
     onClose && onClose();
   };
 
   return (
-    <ModalBS show={open} onHide={closeModal}>
-      <ModalBS.Body className="text-center">
-        {error ? error : message}
-      </ModalBS.Body>
+    <ModalBS show={open} onHide={() => setOpen(false)}>
+      <ModalBS.Body className="text-center">{message}</ModalBS.Body>
       <ModalBS.Footer className="justify-content-center">
         <Button variant={error ? "danger" : "dark"} onClick={submitHandler}>
           {error ? "OK" : "Remove"}
