@@ -1,120 +1,37 @@
-export {};
-// import { screen, render, act } from "@testing-library/react";
-// import { Folder } from "../Folder";
-// import { MemoryRouter } from "react-router-dom";
-// import {
-//   removeFolder,
-//   fakeFolder,
-//   getChildFolders,
-// } from "../../../../../../tests/mocks/fileMock";
+import { screen } from "@testing-library/react";
+import { render } from "../../../../../../tests/render";
+import { Folder } from "./index";
+import { fakeFolder, fakeFolder2 } from "../../../../../../tests/constants";
+import { removeFolder } from "../../services";
 
-// jest.mock("../../../../../tests/mocks/fileMock", () => {
-//   const originalModule = jest.requireActual(
-//     "../../../../../tests/mocks/fileMock"
-//   );
-//   return {
-//     __esModule: true,
-//     ...originalModule,
-//   };
-// });
+const mockedRemoveFolder = removeFolder as jest.Mock<any>;
 
-// const userId = "user123";
+jest.mock("../../services");
 
-// const myFakeFolder = {
-//   createdAt: null,
-//   name: "fakeFolder",
-//   id: "fakeFolderId",
-//   parentId: "gfreg",
-//   path: [],
-//   userId,
-// };
+it("displays folder icon", () => {
+  render(<Folder folder={fakeFolder} />);
+  expect(screen.getByText(fakeFolder.name)).toBeInTheDocument();
+  expect(screen.getByRole("link")).toHaveAttribute(
+    "href",
+    `/folder/${fakeFolder.id}`
+  );
+});
 
-// const myFakeFolderWithChildren = {
-//   createdAt: null,
-//   name: "fakeFolder",
-//   id: fakeFolder.parentId,
-//   parentId: "gfreg",
-//   path: [],
-//   userId,
-// };
+it("confirming dialog calls removeFolder", async () => {
+  render(<Folder folder={fakeFolder2} />);
+  await screen.getByRole("button", { name: "remove folder" }).click();
 
-// afterEach(() => {
-//   removeFolder.mockClear();
-// });
+  await screen.getByRole("button", { name: "Remove" }).click();
+  expect(mockedRemoveFolder).toHaveBeenCalledWith(fakeFolder2.id);
+});
 
-// it("renders folder with correct url", async () => {
-//   render(
-//     <MemoryRouter>
-//       <Folder folder={myFakeFolder} />
-//     </MemoryRouter>
-//   );
-//   const anchor = screen.getByRole("link");
-//   await expect(anchor).toHaveAttribute("href", `/folder/${myFakeFolder.id}`);
-// });
+it("displays error if folder is not empty", async () => {
+  render(<Folder folder={fakeFolder} />);
+  await screen.getByRole("button", { name: "remove folder" }).click();
 
-// it("removes Folder", async () => {
-//   const component = (
-//     <MemoryRouter>
-//       <Folder folder={myFakeFolder} />
-//     </MemoryRouter>
-//   );
-//   const { rerender } = render(component);
-//   const button = screen.getByRole("button");
-//   await act(async () => {
-//     await button.click();
-//   });
-//   rerender(component);
-//   const dialog = screen.getByRole("dialog");
-//   const info = screen.getByText(
-//     `Are you sure you want to delete ${myFakeFolder.name}?`
-//   );
-//   const removeBtn = screen.getByText("Remove");
-//   expect(dialog).toBeInTheDocument();
-//   expect(info).toBeInTheDocument();
-//   await act(async () => {
-//     await removeBtn.click();
-//   });
-//   rerender(component);
-//   expect(removeFolder).toHaveBeenCalled();
-//   expect(dialog).not.toBeInTheDocument();
-// });
-
-// it("doesn't allow to remove non empty Folder", async () => {
-//   getChildFolders.mockImplementation(
-//     jest.fn(async ({ parentId, userId, callbackFunc }) => {
-//       const cos = [
-//         {
-//           id: fakeFolder.id,
-//           data: () => {
-//             const { id, ...rest } = fakeFolder;
-//             return rest;
-//           },
-//         },
-//       ];
-//       callbackFunc(cos);
-//     })
-//   );
-
-//   const component = (
-//     <MemoryRouter>
-//       {/* <Folder userId={userId} folder={myFakeFolderWithChildren} /> */}
-//     </MemoryRouter>
-//   );
-//   const { rerender } = render(component);
-//   const button = screen.getByRole("button");
-//   await act(async () => {
-//     await button.click();
-//   });
-//   rerender(component);
-//   const dialog = screen.getByRole("dialog");
-//   const info = screen.getByText("folder must be empty");
-//   const okBtn = screen.getByText("OK");
-//   expect(dialog).toBeInTheDocument();
-//   expect(info).toBeInTheDocument();
-//   await act(async () => {
-//     await okBtn.click();
-//   });
-//   rerender(component);
-//   expect(removeFolder).not.toHaveBeenCalled();
-//   expect(dialog).not.toBeInTheDocument();
-// });
+  const dialogInfo = screen.getByText("folder must be empty");
+  expect(dialogInfo).toBeInTheDocument();
+  await screen.getByRole("button", { name: "OK" }).click();
+  expect(dialogInfo).not.toBeInTheDocument();
+  expect(mockedRemoveFolder).not.toHaveBeenCalledWith(fakeFolder2.id);
+});

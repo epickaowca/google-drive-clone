@@ -1,11 +1,11 @@
 import { DriveProvider, ContextType } from "../../src/context";
 import { FC, ReactNode } from "react";
-import { fakeFile, fakeFolder } from "../constants";
+import { fakeFile, fakeFolder, fakeFolder2 } from "../constants";
 
 const staticValue = {
   getData: (folderId: string) => {
     return {
-      folders: [fakeFolder],
+      folders: [fakeFolder, fakeFolder2],
       files: [fakeFile],
       currentFolder: fakeFolder,
     };

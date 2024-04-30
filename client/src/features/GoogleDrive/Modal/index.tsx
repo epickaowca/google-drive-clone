@@ -14,17 +14,14 @@ export const Modal: FC<ModalProps> = ({
   message,
   onSubmit,
 }) => {
-  const [open, setOpen] = useState(true);
-
   const submitHandler = async () => {
-    setOpen(false);
     onSubmit && onSubmit();
     onClose && onClose();
   };
 
   return (
-    <ModalBS show={open} onHide={() => setOpen(false)}>
-      <ModalBS.Body className="text-center">{error ?? message}</ModalBS.Body>
+    <ModalBS show={true} onHide={onClose}>
+      <ModalBS.Body className="text-center">{error || message}</ModalBS.Body>
       <ModalBS.Footer className="justify-content-center">
         <Button variant={error ? "danger" : "dark"} onClick={submitHandler}>
           {error ? "OK" : "Remove"}

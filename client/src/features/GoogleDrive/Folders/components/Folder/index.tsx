@@ -12,10 +12,10 @@ type FolderProps = {
 };
 
 export const Folder: FC<FolderProps> = ({ folder }) => {
-  const { files, folders } = useDrive();
-
+  const { files, folders } = useDrive(folder.id);
   const [isOpen, setIsOpen] = useState(false);
   const isEmpty = files.length === 0 && folders.length === 0;
+
   const onSubmitHandler = async () => {
     if (isEmpty) {
       await removeFolder(folder.id!);
@@ -32,6 +32,7 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
         <span className="ms-2">{folder.name}</span>
       </Link>
       <button
+        aria-label="remove folder"
         onClick={() => setIsOpen(true)}
         className="btn btn-outline-dark border-start-0 rounded-start-0"
       >

@@ -16,14 +16,14 @@ export type ContextType = {
 
 const Context = React.createContext<ContextType | null>(null);
 
-export const useDrive = () => {
-  const { folderId } = useParams();
+export const useDrive = (folderId?: string) => {
+  const { folderId: folderIdParam } = useParams();
   const context = useContext(Context);
   if (context === null) {
     throw new Error("useDrive context is undefined");
   } else {
     const { currentFolder, files, folders } = context.getData(
-      folderId || "root"
+      folderId || folderIdParam || "root"
     );
     return { currentFolder, files, folders };
   }
