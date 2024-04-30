@@ -1,14 +1,14 @@
-export {};
-// import { Navbar } from "../Navbar";
-// import { screen, render } from "@testing-library/react";
-// import { MemoryRouter } from "react-router-dom";
+import { Navbar } from "./index";
+import { render } from "../../../../tests/render";
+import { screen } from "@testing-library/dom";
+import { email } from "../../../../tests/constants";
 
-// it("renders user email", () => {
-//   const user_email = "user@test.com";
-//   render(
-//     <MemoryRouter>
-//       <Navbar user_email={user_email} />
-//     </MemoryRouter>
-//   );
-//   expect(screen.getByText(user_email)).toBeInTheDocument();
-// });
+it("displays user email", () => {
+  render(<Navbar />);
+  expect(screen.getByText(email)).toBeInTheDocument();
+});
+
+it("displays profile link", () => {
+  render(<Navbar />);
+  expect(screen.getByText("Profile")).toHaveAttribute("href", "/profile");
+});

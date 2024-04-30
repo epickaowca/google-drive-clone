@@ -22,22 +22,17 @@ export const Home: FC = () => {
 
   return (
     <DriveProvider>
-      <Dashboard user_email={user!.email} userId={user!.uid} />
+      <Dashboard />
     </DriveProvider>
   );
 };
 
-type DashboardProps = {
-  userId: string;
-  user_email: string | null;
-};
-
-const Dashboard: FC<DashboardProps> = ({ userId, user_email }) => {
+const Dashboard: FC = () => {
   const { files, folders } = useDrive();
 
   return (
     <>
-      <Navbar user_email={user_email}></Navbar>
+      <Navbar />
       <Container className="mt-4">
         <div className="d-flex align-items-center mb-5 position-relative">
           <AvailableDiskSpace />

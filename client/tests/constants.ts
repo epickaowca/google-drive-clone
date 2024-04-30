@@ -1,6 +1,7 @@
 import { FirebaseFile, FirebaseFolder } from "../src/types";
 
 export const userId = "testUserId123";
+export const email = "testEmail123";
 
 export const fakeFolder: FirebaseFolder = {
   name: "FakeFolder",

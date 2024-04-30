@@ -1,11 +1,11 @@
 import "@testing-library/jest-dom";
-import { userId } from "./constants";
+import { userId, email } from "./constants";
 import { ROOT_FOLDER } from "../src/constants";
 import { fakeFolder, fakeFolder2, fakeFile } from "./constants";
 
 jest.mock("react-firebase-hooks/auth", () => ({
   ...jest.requireActual("react-firebase-hooks/auth"),
-  useAuthState: jest.fn(() => [{ uid: userId }, false, false]),
+  useAuthState: jest.fn(() => [{ uid: userId, email }, false, false]),
 }));
 
 jest.mock("../src/firebase", () => ({

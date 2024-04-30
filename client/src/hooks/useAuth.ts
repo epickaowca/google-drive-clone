@@ -8,6 +8,7 @@ export const useAuth = () => {
     throw new Error("useAuth - user is undefined");
   }
 
-  const userId = user.uid;
-  return { userId };
+  const { uid: userId, email } = user;
+
+  return { userId, email };
 };
