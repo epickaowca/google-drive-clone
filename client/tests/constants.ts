@@ -20,7 +20,7 @@ export const fakeFolder2: FirebaseFolder = {
     { id: "fakeFolder", name: "FakeFolder" },
   ],
   createdAt: null,
-  parentId: "fakeFolder",
+  parentId: fakeFolder.id,
   userId,
 };
 

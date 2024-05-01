@@ -1,5 +1,4 @@
 import { Timestamp } from "firebase/firestore";
-import { UploadTaskSnapshot } from "firebase/storage";
 
 export type FirebaseFolder = {
   createdAt: Timestamp | null;
@@ -19,5 +18,3 @@ export type FirebaseFile = {
   userId: string;
   filePath: string;
 };
-
-export type UploadTaskCB = (snapshot: UploadTaskSnapshot) => void;

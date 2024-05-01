@@ -35,14 +35,7 @@ export const AddFile: FC = () => {
 
       {uploadingFiles.length > 0 &&
         ReactDOM.createPortal(
-          <div
-            style={{
-              position: "absolute",
-              bottom: "1rem",
-              right: "1rem",
-              maxWidth: "250px",
-            }}
-          >
+          <div className="position-fixed end-0 bottom-0 m-5 me-2 mw-100">
             {uploadingFiles.map(({ file, id }) => (
               <FileToast
                 onClose={() =>
