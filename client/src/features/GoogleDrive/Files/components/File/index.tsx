@@ -4,22 +4,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../../../Modal";
 import { removeFile } from "../../services";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../../../firebase";
+import { useAuth } from "../../../../../hooks/useAuth";
 
 type FileProps = {
   file: FirebaseFile;
 };
 
 export const File: FC<FileProps> = ({ file: { id, filePath, name, url } }) => {
-  const [user] = useAuthState(auth);
+  const { userId } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmitHandler = async () => {
     await removeFile({
       fileId: id,
       filePath: filePath,
-      userId: user!.uid,
+      userId,
     });
   };
 

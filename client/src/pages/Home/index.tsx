@@ -1,8 +1,5 @@
 import { FC } from "react";
 import { Container } from "react-bootstrap";
-import { Navigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase";
 import {
   AvailableDiskSpace,
   Folders,
@@ -16,10 +13,6 @@ import { useDrive } from "../../context";
 import { DriveProvider } from "../../context";
 
 export const Home: FC = () => {
-  const [user, userLoading] = useAuthState(auth);
-  if (userLoading) return <h1>Loading...</h1>;
-  if (!userLoading && !user) return <Navigate to="/login" replace={true} />;
-
   return (
     <DriveProvider>
       <Dashboard />

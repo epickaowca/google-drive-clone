@@ -1,6 +1,5 @@
 import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { useAuth } from "../hooks/useAuth";
 import { FirebaseFolder, FirebaseFile } from "../types";
 import { ROOT_FOLDER } from "../constants";
 import { subscribe } from "./services";
@@ -32,13 +31,13 @@ export const useDrive = (folderId?: string) => {
 export const DriveProvider: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
-  const [user] = useAuthState(auth);
+  const { userId } = useAuth();
   const [allFiles, setAllFiles] = useState<FirebaseFile[] | null>(null);
   const [allFolders, setAllFolders] = useState<FirebaseFolder[] | null>(null);
 
   useEffect(() => {
-    const unsubscribeFiles = subscribe("files", user!.uid, setAllFiles);
-    const unsubscribeFolders = subscribe("folders", user!.uid, setAllFolders);
+    const unsubscribeFiles = subscribe("files", userId, setAllFiles);
+    const unsubscribeFolders = subscribe("folders", userId, setAllFolders);
 
     return () => {
       unsubscribeFiles();
