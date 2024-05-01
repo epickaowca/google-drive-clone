@@ -28,12 +28,14 @@ jest.mock("../src/context", () => ({
   ...jest.requireActual("../src/context"),
   useDrive: jest.fn((folderId: string = ROOT_FOLDER.id) => {
     const folderList = [fakeFolder, fakeFolder2];
-    const currentFolder = folderId
-      ? folderList.find((folder) => folder.id === folderId)
-      : ROOT_FOLDER;
+    const currentFolder =
+      folderId !== ROOT_FOLDER.id
+        ? folderList.find((folder) => folder.id === folderId)
+        : ROOT_FOLDER;
     const files = [fakeFile].filter((file) => file.folderId === folderId);
     const folders = folderList.filter((folder) => folder.parentId === folderId);
-
+    console.log("folderId");
+    console.log(folderId);
     return {
       currentFolder,
       files,

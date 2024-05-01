@@ -4,7 +4,6 @@ import { fileExists, createFile } from "../services";
 import { render } from "../../../../../tests/render";
 import { UploadTask, uploadBytesResumable } from "firebase/storage";
 import { userId } from "../../../../../tests/constants";
-import { fakeFolder } from "../../../../../tests/constants";
 
 const downloadUrl = "mockedUrl";
 jest.useFakeTimers();
@@ -110,9 +109,9 @@ it("displays toast success and calls createFile", async () => {
     expect(mockedCreateFile).toHaveBeenCalledWith({
       url: downloadUrl,
       name: fileObj.file.name,
-      folderId: fakeFolder.id,
+      folderId: "root",
       userId: userId,
-      filePath: "/files/testUserId123/Root/fakeFolder/filename",
+      filePath: "/files/testUserId123/Root/filename",
       size: 0,
     })
   );

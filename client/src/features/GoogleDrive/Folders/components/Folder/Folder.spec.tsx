@@ -8,13 +8,15 @@ const mockedRemoveFolder = removeFolder as jest.Mock<any>;
 
 jest.mock("../../services");
 
-it("displays folder icon", () => {
+it("displays error if folder is not empty", async () => {
   render(<Folder folder={fakeFolder} />);
-  expect(screen.getByText(fakeFolder.name)).toBeInTheDocument();
-  expect(screen.getByRole("link")).toHaveAttribute(
-    "href",
-    `/folder/${fakeFolder.id}`
-  );
+  await screen.getByRole("button", { name: "remove folder" }).click();
+
+  const dialogInfo = screen.getByText("folder must be empty");
+  expect(dialogInfo).toBeInTheDocument();
+  await screen.getByRole("button", { name: "OK" }).click();
+  expect(dialogInfo).not.toBeInTheDocument();
+  expect(mockedRemoveFolder).not.toHaveBeenCalledWith(fakeFolder2.id);
 });
 
 it("confirming dialog calls removeFolder", async () => {
@@ -25,13 +27,11 @@ it("confirming dialog calls removeFolder", async () => {
   expect(mockedRemoveFolder).toHaveBeenCalledWith(fakeFolder2.id);
 });
 
-it("displays error if folder is not empty", async () => {
+it("displays folder icon", () => {
   render(<Folder folder={fakeFolder} />);
-  await screen.getByRole("button", { name: "remove folder" }).click();
-
-  const dialogInfo = screen.getByText("folder must be empty");
-  expect(dialogInfo).toBeInTheDocument();
-  await screen.getByRole("button", { name: "OK" }).click();
-  expect(dialogInfo).not.toBeInTheDocument();
-  expect(mockedRemoveFolder).not.toHaveBeenCalledWith(fakeFolder2.id);
+  expect(screen.getByText(fakeFolder.name)).toBeInTheDocument();
+  expect(screen.getByRole("link")).toHaveAttribute(
+    "href",
+    `/folder/${fakeFolder.id}`
+  );
 });

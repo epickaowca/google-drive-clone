@@ -35,12 +35,9 @@ it("submitting form - calls createFolder", async () => {
   await screen.getByRole("button", { name: "Add Folder" }).click();
   expect(mockedCreateFolder).toHaveBeenCalledWith({
     name: folderName,
-    parentId: fakeFolder.id,
+    parentId: "root",
     userId,
-    path: [
-      { id: "root", name: "Root" },
-      { id: "fakeFolder", name: "fakeFolder" },
-    ],
+    path: [{ id: "root", name: "Root" }],
   });
   await waitFor(async () => expect(dialog).not.toBeInTheDocument());
 });

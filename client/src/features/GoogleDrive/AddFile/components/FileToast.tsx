@@ -63,7 +63,7 @@ export const FileToast: FC<FileToastProps> = ({ id, file, onClose }) => {
 
       const filePath = `/files/${userId}/${currentFolder.path
         .map((e) => e.name)
-        .join("/")}/${currentFolder.name}/${name}`;
+        .join("/")}${currentFolder.name}/${name}`;
       const fileRef = ref(storage, filePath);
 
       setUploadingFile(fileObj);

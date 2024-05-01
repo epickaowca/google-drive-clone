@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
-import { singIn } from "./services/singInService";
+import { singIn } from "./services/singIn";
 import { LoginForm } from "./components/LoginForm";
 import { useAsyncFn } from "../../hooks/useAsync";
 import { isSignInWithEmailLink } from "firebase/auth";
@@ -9,7 +9,7 @@ import { Navigate } from "react-router-dom";
 
 export const Auth: FC = () => {
   const [user, userLoading] = useAuthState(auth);
-  const { execute: singInExec, loading } = useAsyncFn(singIn, [user]);
+  const { execute, loading } = useAsyncFn(singIn, [user]);
 
   useEffect(
     function singInUser() {
@@ -20,7 +20,7 @@ export const Auth: FC = () => {
           if (!email) {
             email = window.prompt("Please provide your email")!;
           }
-          singInExec({ email, emailLink });
+          execute({ email, emailLink });
         }
       }
     },

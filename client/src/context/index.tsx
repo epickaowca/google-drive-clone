@@ -31,8 +31,7 @@ export const useDrive = (folderId?: string) => {
 
 export const DriveProvider: FC<{
   children?: ReactNode;
-  staticValue?: ContextType;
-}> = ({ children, staticValue }) => {
+}> = ({ children }) => {
   const [user] = useAuthState(auth);
   const [allFiles, setAllFiles] = useState<FirebaseFile[] | null>(null);
   const [allFolders, setAllFolders] = useState<FirebaseFolder[] | null>(null);
@@ -57,12 +56,8 @@ export const DriveProvider: FC<{
     };
   };
 
-  if (staticValue || (allFiles && allFolders)) {
-    return (
-      <Context.Provider value={staticValue || { getData }}>
-        {children}
-      </Context.Provider>
-    );
+  if (allFiles && allFolders) {
+    return <Context.Provider value={{ getData }}>{children}</Context.Provider>;
   } else {
     return <h1>Loading...</h1>;
   }
