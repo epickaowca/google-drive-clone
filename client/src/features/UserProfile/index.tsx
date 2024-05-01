@@ -1,28 +1,23 @@
-import { FC, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { FC } from "react";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
-import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Container, Button } from "react-bootstrap";
+import { NavLink } from "react-bootstrap";
+import { useAuth } from "../../hooks/useAuth";
 
 export const UserProfile: FC = () => {
-  const [, forceRerender] = useState<any>("");
-  const [user, userLoading] = useAuthState(auth);
-  if (userLoading) return <h1>Loading...</h1>;
-  if (!userLoading && !user) return <Navigate to="/login" replace={true} />;
-
-  const signOutHandler = () => {
-    signOut(auth).then(() => {
-      forceRerender({});
-    });
-  };
+  const { email } = useAuth();
 
   return (
     <Container>
       <div className="text-center" style={{ marginTop: "100px" }}>
         <h1>User Profile</h1>
-        <p>{user?.email}</p>
-        <Button onClick={signOutHandler}>Logout</Button>
+        <p>{email}</p>
+        <Button onClick={() => signOut(auth)}>Logout</Button>
+        <NavLink as={Link} to="/" className="mt-3 text-success">
+          Go back to Home
+        </NavLink>
       </div>
     </Container>
   );
