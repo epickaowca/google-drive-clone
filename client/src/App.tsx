@@ -1,7 +1,8 @@
-import { FC, Suspense, lazy } from "react";
+import { FC, Suspense, lazy, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { auth } from "./firebase";
+import { SpinLoader } from "./features/SpinLoader";
 
 const Home = lazy(() =>
   import("./pages/Home").then((module) => {
@@ -22,6 +23,10 @@ const Profile = lazy(() =>
 );
 
 const App: FC = () => {
+  useEffect(() => {
+    document.getElementById("loader")?.remove();
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -40,11 +45,11 @@ const App: FC = () => {
 
 const RouteWrapper = () => {
   const [user, userLoading] = useAuthState(auth);
-  if (userLoading) return <h1>Loading...</h1>;
+  if (userLoading) return <SpinLoader />;
   if (!userLoading && !user) return <Login />;
 
   return (
-    <Suspense fallback={<h1>Loading...</h1>}>
+    <Suspense fallback={<SpinLoader />}>
       <Outlet />
     </Suspense>
   );

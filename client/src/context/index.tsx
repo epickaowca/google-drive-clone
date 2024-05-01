@@ -4,6 +4,7 @@ import { FirebaseFolder, FirebaseFile } from "../types";
 import { ROOT_FOLDER } from "../constants";
 import { subscribe } from "./services";
 import { useParams } from "react-router-dom";
+import { SpinLoader } from "../features/SpinLoader";
 
 export type ContextType = {
   getData: (folderId: string) => {
@@ -58,6 +59,6 @@ export const DriveProvider: FC<{
   if (allFiles && allFolders) {
     return <Context.Provider value={{ getData }}>{children}</Context.Provider>;
   } else {
-    return <h1>Loading...</h1>;
+    return <SpinLoader />;
   }
 };
