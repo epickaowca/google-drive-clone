@@ -1,4 +1,4 @@
-import { db } from "../../../../firebase";
+import { db } from "@root/firebase";
 import {
   getDocs,
   collection,
@@ -7,7 +7,7 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
-import { updateSizeMeasurementFile } from "../../../../services";
+import { updateSizeMeasurementFile } from "@root/services";
 
 export const fileExists = async ({
   folderId,

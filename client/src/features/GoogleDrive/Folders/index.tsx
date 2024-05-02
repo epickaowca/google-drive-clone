@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Folder } from "./components/Folder";
-import { useDrive } from "../../../context";
+import { useDrive } from "@root/context";
 
 export const Folders: FC = () => {
   const { folders } = useDrive();

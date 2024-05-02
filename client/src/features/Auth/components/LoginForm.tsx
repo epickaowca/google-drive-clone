@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import { sendEmail } from "../services/singIn";
-import { useAsyncFn } from "../../../hooks/useAsync";
+import { useAsyncFn } from "@root/hooks/useAsync";
 
 export const LoginForm: FC = () => {
   const [email, setEmail] = useState("");

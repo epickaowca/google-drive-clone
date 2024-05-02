@@ -1,7 +1,7 @@
 import { screen, waitFor } from "@testing-library/react";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 import { AvailableDiskSpace } from "../AvailableDiskSpace";
-import { getSizeMeasurementFile } from "../../../services";
+import { getSizeMeasurementFile } from "@root/services";
 
 const mockedSizeMeasurementFile = getSizeMeasurementFile as jest.Mock<any>;
 

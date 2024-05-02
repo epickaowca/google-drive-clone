@@ -1,10 +1,10 @@
 import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@root/hooks/useAuth";
 import { FirebaseFolder, FirebaseFile } from "../types";
-import { ROOT_FOLDER } from "../constants";
+import { ROOT_FOLDER } from "@root/constants";
 import { subscribe } from "./services";
 import { useParams } from "react-router-dom";
-import { SpinLoader } from "../features/SpinLoader";
+import { SpinLoader } from "@root/features/SpinLoader";
 
 export type ContextType = {
   getData: (folderId: string) => {

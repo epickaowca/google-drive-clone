@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
-import { FirebaseFile } from "../../../../../types";
+import { FirebaseFile } from "@root/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faRemove } from "@fortawesome/free-solid-svg-icons";
-import { Modal } from "../../../Modal";
+import { Modal } from "@root/features/GoogleDrive";
 import { removeFile } from "../../services";
-import { useAuth } from "../../../../../hooks/useAuth";
+import { useAuth } from "@root/hooks/useAuth";
 
 type FileProps = {
   file: FirebaseFile;

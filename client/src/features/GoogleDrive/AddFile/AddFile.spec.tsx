@@ -1,7 +1,7 @@
 import { screen, act, queryByAttribute } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { AddFile } from "./index";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 
 jest.mock("./components/FileToast", () => ({
   FileToast: jest.fn(({ file }: { file: File }) => <div>{file.name}</div>),

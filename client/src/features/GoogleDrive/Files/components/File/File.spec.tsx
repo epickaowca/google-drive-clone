@@ -1,7 +1,7 @@
 import { act, screen, waitFor } from "@testing-library/react";
-import { render } from "../../../../../../tests/render";
+import { render } from "@tests/render";
 import { File } from "./index";
-import { userId, fakeFile } from "../../../../../../tests/constants";
+import { userId, fakeFile } from "@tests/constants";
 
 import { removeFile } from "../../services";
 const mockedRemoveFile = removeFile as jest.Mock<any>;

@@ -3,8 +3,8 @@ import { Button, Modal, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { createFolder } from "./services";
-import { useDrive } from "../../../context";
-import { useAuth } from "../../../hooks/useAuth";
+import { useDrive } from "@root/context";
+import { useAuth } from "@root/hooks/useAuth";
 
 export const AddFolder: FC = () => {
   const { userId } = useAuth();

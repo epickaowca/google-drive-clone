@@ -1,6 +1,6 @@
 import { Modal } from "../Modal";
 import { screen } from "@testing-library/react";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 
 it("displays message and Remove button", () => {
   const message = "messageTest";

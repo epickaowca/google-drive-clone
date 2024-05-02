@@ -1,7 +1,7 @@
-import { db, storage } from "../../../../firebase";
+import { db, storage } from "@root/firebase";
 import { ref, deleteObject, getMetadata } from "firebase/storage";
 import { doc, deleteDoc } from "firebase/firestore";
-import { updateSizeMeasurementFile } from "../../../../services";
+import { updateSizeMeasurementFile } from "@root/services";
 
 export const removeFile = async ({
   fileId,

@@ -1,9 +1,9 @@
 import { screen, waitFor } from "@testing-library/react";
 import { FileToast } from "./FileToast";
 import { fileExists, createFile } from "../services";
-import { render } from "../../../../../tests/render";
+import { render } from "@tests/render";
 import { UploadTask, uploadBytesResumable } from "firebase/storage";
-import { userId } from "../../../../../tests/constants";
+import { userId } from "@tests/constants";
 
 const downloadUrl = "mockedUrl";
 jest.useFakeTimers();

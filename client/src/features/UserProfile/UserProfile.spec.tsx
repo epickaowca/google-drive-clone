@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
-import { render } from "../../../tests/render";
-import { email } from "../../../tests/constants";
+import { render } from "@tests/render";
+import { email } from "@tests/constants";
 import { UserProfile } from "./index";
 import { signOut } from "firebase/auth";
 

@@ -1,6 +1,6 @@
 import { Auth } from "./index";
 import { screen } from "@testing-library/react";
-import { render } from "../../../tests/render";
+import { render } from "@tests/render";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const mockedUseAuthState = useAuthState as jest.Mock<any>;

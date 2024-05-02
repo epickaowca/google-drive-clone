@@ -3,7 +3,7 @@ import {
   signInWithEmailLink,
   UserCredential,
 } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "@root/firebase";
 
 export const sendEmail: SendEmail = async ({ email }) => {
   try {

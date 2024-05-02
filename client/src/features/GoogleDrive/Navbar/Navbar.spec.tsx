@@ -1,7 +1,7 @@
 import { Navbar } from "./index";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 import { screen } from "@testing-library/dom";
-import { email } from "../../../../tests/constants";
+import { email } from "@tests/constants";
 
 it("displays user email", () => {
   render(<Navbar />);

@@ -1,8 +1,8 @@
 import { screen } from "@testing-library/react";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 import { Breadcrumbs } from "../Breadcrumbs";
-import { fakeFolder } from "../../../../tests/constants";
-import { useDrive } from "../../../context";
+import { fakeFolder } from "@tests/constants";
+import { useDrive } from "@root/context";
 
 const mockedUseDrive = useDrive as jest.Mock<any>;
 

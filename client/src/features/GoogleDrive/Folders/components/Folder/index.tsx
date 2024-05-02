@@ -1,11 +1,11 @@
 import { FC, useState } from "react";
-import { FirebaseFolder } from "../../../../../types";
+import { FirebaseFolder } from "@root/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { removeFolder } from "../../services";
-import { Modal } from "../../../Modal";
-import { useDrive } from "../../../../../context";
+import { Modal } from "@root/features/GoogleDrive";
+import { useDrive } from "@root/context";
 
 type FolderProps = {
   folder: FirebaseFolder;

@@ -1,6 +1,6 @@
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 import { Folders } from "./index";
-import { fakeFolder } from "../../../../tests/constants";
+import { fakeFolder } from "@tests/constants";
 import { screen } from "@testing-library/dom";
 
 it("displays folderList", () => {

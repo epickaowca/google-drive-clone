@@ -1,6 +1,6 @@
 import { LoginForm } from "./LoginForm";
 import { screen, fireEvent, waitFor } from "@testing-library/react";
-import { render } from "../../../../tests/render";
+import { render } from "@tests/render";
 import { sendEmail } from "../services/singIn";
 
 const email = "email@gmail.com";

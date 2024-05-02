@@ -8,9 +8,9 @@ import {
   AddFolder,
   Navbar,
   Breadcrumbs,
-} from "../../features/GoogleDrive";
-import { useDrive } from "../../context";
-import { DriveProvider } from "../../context";
+} from "@root/features/GoogleDrive";
+import { useDrive } from "@root/context";
+import { DriveProvider } from "@root/context";
 
 export const Home: FC = () => {
   return (

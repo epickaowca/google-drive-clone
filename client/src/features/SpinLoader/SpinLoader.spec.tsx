@@ -1,4 +1,4 @@
-import { render } from "../../../tests/render";
+import { render } from "@tests/render";
 import { SpinLoader } from "./index";
 import { screen } from "@testing-library/react";
 

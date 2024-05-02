@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { auth } from "../../firebase";
+import { auth } from "@root/firebase";
 import { signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 import { Container, Button } from "react-bootstrap";
 import { NavLink } from "react-bootstrap";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "@root/hooks/useAuth";
 
 export const UserProfile: FC = () => {
   const { email } = useAuth();

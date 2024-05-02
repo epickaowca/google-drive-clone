@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Navbar as NavbarBS, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "@root/hooks/useAuth";
 
 export const Navbar: FC = () => {
   const { email } = useAuth();

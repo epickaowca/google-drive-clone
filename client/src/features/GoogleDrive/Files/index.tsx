@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useDrive } from "../../../context";
+import { useDrive } from "@root/context";
 import { File } from "./components/File";
 
 export const Files: FC = () => {

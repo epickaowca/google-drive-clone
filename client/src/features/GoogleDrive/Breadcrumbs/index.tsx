@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useDrive } from "../../../context";
+import { useDrive } from "@root/context";
 
 export const Breadcrumbs: FC = () => {
   const { currentFolder } = useDrive();

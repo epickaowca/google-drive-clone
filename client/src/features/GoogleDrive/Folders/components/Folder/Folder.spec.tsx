@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
-import { render } from "../../../../../../tests/render";
+import { render } from "@tests/render";
 import { Folder } from "./index";
-import { fakeFolder, fakeFolder2 } from "../../../../../../tests/constants";
+import { fakeFolder, fakeFolder2 } from "@tests/constants";
 import { removeFolder } from "../../services";
 
 const mockedRemoveFolder = removeFolder as jest.Mock<any>;

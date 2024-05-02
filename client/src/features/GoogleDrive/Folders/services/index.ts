@@ -1,4 +1,4 @@
-import { db } from "../../../../firebase";
+import { db } from "@root/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 
 export const removeFolder = async (folderId: string) => {

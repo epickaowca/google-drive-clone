@@ -1,4 +1,4 @@
-import { db } from "../../../../firebase";
+import { db } from "@root/firebase";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 
 export const createFolder = async (args: CreateFolderArgs) => {

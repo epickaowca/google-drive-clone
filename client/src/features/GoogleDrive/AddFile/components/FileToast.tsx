@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import { ProgressBar, Toast } from "react-bootstrap";
 import { fileExists } from "../services";
-import { useDrive } from "../../../../context";
-import { storage } from "../../../../firebase";
+import { useDrive } from "@root/context";
+import { storage } from "@root/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { createFile } from "../services";
-import { getSizeMeasurementFile } from "../../../../services";
+import { getSizeMeasurementFile } from "@root/services";
 import { MAX_SPACE_IN_BYTES } from "../../AvailableDiskSpace";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "@root/hooks/useAuth";
 
 type FileToastProps = {
   id: string;

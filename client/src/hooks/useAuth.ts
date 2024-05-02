@@ -1,4 +1,4 @@
-import { auth } from "../firebase";
+import { auth } from "@root/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export const useAuth = () => {
