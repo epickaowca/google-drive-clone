@@ -5,8 +5,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 const mockedUseAuthState = useAuthState as jest.Mock<any>;
 
-jest.mock("./components/LoginForm", () => ({
-  LoginForm: jest.fn(() => <h1>login form</h1>),
+jest.mock("./components/", () => ({
+  LoginForm: jest.fn(() => <div data-testId="LoginForm"></div>),
 }));
 
 jest.mock("react-router-dom", () => ({
@@ -34,5 +34,5 @@ it("displays loading state", () => {
 it("displays login form", () => {
   mockedUseAuthState.mockReturnValue([undefined, false, false]);
   render(<Auth />);
-  expect(screen.getByText("login form")).toBeInTheDocument();
+  expect(screen.getByTestId("LoginForm")).toBeInTheDocument();
 });
