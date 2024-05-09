@@ -3,8 +3,9 @@ import { userEvent } from "@testing-library/user-event";
 import { AddFile } from "./index";
 import { render } from "@tests/render";
 
+const FileToastProps = jest.fn();
 jest.mock("./components/FileToast", () => ({
-  FileToast: jest.fn(({ file }: { file: File }) => <div>{file.name}</div>),
+  FileToast: jest.fn((props) => FileToastProps(props)),
 }));
 
 it("displays toast after adding file to input", async () => {
@@ -16,6 +17,10 @@ it("displays toast after adding file to input", async () => {
     await userEvent.upload(fileInput!, file);
   });
 
-  expect(screen.getByText(file.name)).toBeInTheDocument();
+  expect(FileToastProps).toHaveBeenCalledWith(
+    expect.objectContaining({
+      file,
+    })
+  );
   expect(fileInput).toHaveValue("");
 });
