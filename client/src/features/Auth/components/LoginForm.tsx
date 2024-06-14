@@ -2,8 +2,10 @@ import { FC, useState } from "react";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import { sendEmail } from "../services/singIn";
 import { useAsyncFn } from "@root/hooks/useAsync";
+import { useEvent } from "@owcaofficial/web-analytics";
 
 export const LoginForm: FC = () => {
+  const sendEvent = useEvent();
   const [email, setEmail] = useState("");
   const { execute, error, loading, resData } = useAsyncFn(sendEmail);
 
@@ -12,6 +14,7 @@ export const LoginForm: FC = () => {
     execute({ email }).then(() => {
       localStorage.setItem("email", email);
     });
+    sendEvent("register_action", "submit_form");
   };
 
   return (

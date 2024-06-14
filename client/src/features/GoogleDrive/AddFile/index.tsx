@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidV4 } from "uuid";
 import { FileToast } from "./components/FileToast";
+import { useEvent } from "@owcaofficial/web-analytics";
 
 export const AddFile: FC = () => {
+  const sendEvent = useEvent();
   const [uploadingFiles, setUploadingFiles] = useState<
     { id: string; file: File }[]
   >([]);
@@ -16,6 +18,7 @@ export const AddFile: FC = () => {
     const file = e.target.files[0];
     setUploadingFiles((prev) => [...prev, { id, file }]);
     e.target.value = "";
+    sendEvent("add_file_action", "add_file");
   };
 
   return (

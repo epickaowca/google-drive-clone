@@ -5,12 +5,14 @@ import { faFile, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "@root/features/GoogleDrive";
 import { removeFile } from "../../services";
 import { useAuth } from "@root/hooks/useAuth";
+import { useEvent } from "@owcaofficial/web-analytics";
 
 type FileProps = {
   file: FirebaseFile;
 };
 
 export const File: FC<FileProps> = ({ file: { id, filePath, name, url } }) => {
+  const sendEvent = useEvent();
   const { userId } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,6 +22,8 @@ export const File: FC<FileProps> = ({ file: { id, filePath, name, url } }) => {
       filePath: filePath,
       userId,
     });
+
+    sendEvent("remove_file_action", "remove_file");
   };
 
   return (

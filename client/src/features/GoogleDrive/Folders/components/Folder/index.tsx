@@ -6,12 +6,14 @@ import { Link } from "react-router-dom";
 import { removeFolder } from "../../services";
 import { Modal } from "@root/features/GoogleDrive";
 import { useDrive } from "@root/context";
+import { useEvent } from "@owcaofficial/web-analytics";
 
 type FolderProps = {
   folder: FirebaseFolder;
 };
 
 export const Folder: FC<FolderProps> = ({ folder }) => {
+  const sendEvent = useEvent();
   const { files, folders } = useDrive(folder.id);
   const [isOpen, setIsOpen] = useState(false);
   const isEmpty = files.length === 0 && folders.length === 0;
@@ -19,6 +21,7 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
   const onSubmitHandler = async () => {
     if (isEmpty) {
       await removeFolder(folder.id!);
+      sendEvent("remove_folder_action", "remove_folder");
     }
   };
 

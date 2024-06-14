@@ -5,8 +5,10 @@ import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
 import { createFolder } from "./services";
 import { useDrive } from "@root/context";
 import { useAuth } from "@root/hooks/useAuth";
+import { useEvent } from "@owcaofficial/web-analytics";
 
 export const AddFolder: FC = () => {
+  const sendEvent = useEvent();
   const { userId } = useAuth();
   const {
     currentFolder: { path, name, id },
@@ -28,6 +30,7 @@ export const AddFolder: FC = () => {
 
     setFolderName("");
     setShowDialog(false);
+    sendEvent("add_folder_action", "add_folder");
   };
 
   return (

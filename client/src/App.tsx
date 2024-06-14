@@ -3,6 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { auth } from "./firebase";
 import { SpinLoader } from "./features/SpinLoader";
+import { useAnalytics } from "@owcaofficial/web-analytics";
 
 const Home = lazy(() =>
   import("./pages/Home").then((module) => {
@@ -29,6 +30,7 @@ const NotFoundPage = lazy(() =>
 );
 
 const App: FC = () => {
+  useAnalytics();
   useEffect(() => {
     document.getElementById("loader")?.remove();
   }, []);
